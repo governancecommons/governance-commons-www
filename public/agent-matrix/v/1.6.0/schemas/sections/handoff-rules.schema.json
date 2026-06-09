@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/handoff-rules.schema.json",
+  "title": "Agent Handoff Rules",
+  "type": "object",
+  "required": [
+    "handoff_protocol_version",
+    "required_handoff_fields",
+    "rules",
+    "handoff_failure_policy"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "handoff_protocol_version": { "type": "string" },
+    "envelope_name": { "type": "string" },
+    "required_handoff_fields": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "from", "to", "trigger", "condition", "transfer"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "trigger": { "type": "string" },
+          "condition": { "type": "string" },
+          "transfer": {
+            "type": "object",
+            "required": ["context", "state"],
+            "additionalProperties": false,
+            "properties": {
+              "context": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "state": {
+                "type": "string",
+                "enum": ["reset", "preserve"]
+              }
+            }
+          },
+          "timeout_seconds": { "type": "integer", "minimum": 1 },
+          "on_condition_fail": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "action": { "type": "string" },
+              "reason": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "handoff_failure_policy": {
+      "type": "object",
+      "required": [
+        "on_timeout",
+        "on_agent_unavailable",
+        "on_context_loss",
+        "max_handoff_chain_length"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "on_timeout": { "type": "string" },
+        "on_agent_unavailable": { "type": "string" },
+        "on_context_loss": { "type": "string" },
+        "max_handoff_chain_length": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-dossier/v/1.0.2/schemas/agent-dossier.schema.json",
+  "title": "Agent Dossier Canonical Specification",
+  "description": "Canonical specification document schema. Top-level extension governance is enforced by the validator so profile-specific advisory, standard, and strict handling can produce warnings or errors.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "specification",
+    "identity_block",
+    "handshake_specification",
+    "agent_agreement",
+    "agent_contract",
+    "anti_stall_rules",
+    "handoff_protocol",
+    "yaml_governance_block",
+    "parsing_lint_rules",
+    "pass_changelog_schema",
+    "telemetry_trace_schema",
+    "constraints_restrictions",
+    "threat_model",
+    "resource_budget",
+    "tool_permissions",
+    "reproducibility_block",
+    "escalation_protocol",
+    "failure_modes",
+    "compliance_layer",
+    "inter_agent_diplomacy_rules",
+    "canonical_section_order"
+  ],
+  "properties": {
+    "specification": {
+      "type": "object",
+      "required": [
+        "name",
+        "version",
+        "status",
+        "schema_format",
+        "canonical_file",
+        "runtime_subset",
+        "compatibility",
+        "deterministic_output"
+      ],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "$ref": "#/$defs/semver" },
+        "status": { "enum": ["draft", "active", "deprecated", "retired"] },
+        "schema_format": { "const": "yaml" },
+        "canonical_file": { "const": "agent-dossier.yaml" },
+        "runtime_subset": { "const": "runtime-contract-schema.yaml" },
+        "instance_schema": { "type": "string", "minLength": 1 },
+        "compatibility": {
+          "type": "object",
+          "required": [
+            "versioning",
+            "backward_compatibility_required",
+            "breaking_change_requires_major_version"
+          ],
+          "properties": {
+            "versioning": { "const": "semver" },
+            "backward_compatibility_required": { "type": "boolean" },
+            "breaking_change_requires_major_version": { "type": "boolean" }
+          }
+        },
+        "deterministic_output": {
+          "type": "object",
+          "required": [
+            "encoding",
+            "timestamps",
+            "key_ordering",
+            "extension_prefix_required"
+          ],
+          "properties": {
+            "encoding": { "const": "UTF-8" },
+            "timestamps": { "type": "string", "minLength": 1 },
+            "key_ordering": { "type": "string", "minLength": 1 },
+            "extension_prefix_required": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "canonical_section_order": {
+      "type": "array",
+      "prefixItems": [
+        { "const": "specification" },
+        { "const": "identity_block" },
+        { "const": "handshake_specification" },
+        { "const": "agent_agreement" },
+        { "const": "agent_contract" },
+        { "const": "anti_stall_rules" },
+        { "const": "handoff_protocol" },
+        { "const": "yaml_governance_block" },
+        { "const": "parsing_lint_rules" },
+        { "const": "pass_changelog_schema" },
+        { "const": "telemetry_trace_schema" },
+        { "const": "constraints_restrictions" },
+        { "const": "threat_model" },
+        { "const": "resource_budget" },
+        { "const": "tool_permissions" },
+        { "const": "reproducibility_block" },
+        { "const": "escalation_protocol" },
+        { "const": "failure_modes" },
+        { "const": "compliance_layer" },
+        { "const": "inter_agent_diplomacy_rules" }
+      ],
+      "minItems": 20,
+      "maxItems": 20
+    }
+  },
+  "$defs": {
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:[-+][0-9A-Za-z.-]+)?$"
+    }
+  }
+}

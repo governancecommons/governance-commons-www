@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/trust-levels.schema.json",
+  "title": "Agent Trust Levels",
+  "type": "object",
+  "required": ["levels", "trust_escalation", "trust_revocation"],
+  "additionalProperties": false,
+  "properties": {
+    "levels": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "level",
+          "name",
+          "description",
+          "permitted_capabilities",
+          "prohibited_actions"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "level": {
+            "type": "string",
+            "enum": ["T0", "T1", "T2", "T3", "T4"]
+          },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "permitted_capabilities": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "prohibited_actions": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "requires_human_approval_for": {
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": ["all-actions"]
+              },
+              {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "trust_escalation": {
+      "type": "object",
+      "required": ["allowed"],
+      "additionalProperties": false,
+      "properties": {
+        "allowed": { "type": "boolean" },
+        "requires": { "type": "string" },
+        "audit_required": { "type": "boolean" },
+        "max_escalation_levels": { "type": "integer", "minimum": 0 },
+        "auto_revert_after_seconds": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "trust_revocation": {
+      "type": "object",
+      "required": ["allowed"],
+      "additionalProperties": false,
+      "properties": {
+        "allowed": { "type": "boolean" },
+        "immediate": { "type": "boolean" },
+        "requires": { "type": "string" },
+        "audit_required": { "type": "boolean" }
+      }
+    }
+  }
+}

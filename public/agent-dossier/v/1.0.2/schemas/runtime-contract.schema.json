@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-dossier/v/1.0.2/schemas/runtime-contract.schema.json",
+  "title": "Agent Runtime Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["runtime_contract"],
+  "properties": {
+    "runtime_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "agent_id",
+        "dossier_version",
+        "specification_version",
+        "agent_class",
+        "authority_scope",
+        "accepted_contract",
+        "constraints",
+        "resource_budget",
+        "tool_permissions",
+        "escalation_protocol"
+      ],
+      "properties": {
+        "agent_id": { "$ref": "#/$defs/agent_id" },
+        "dossier_version": { "$ref": "#/$defs/semver" },
+        "specification_version": { "$ref": "#/$defs/semver" },
+        "agent_class": {
+          "enum": [
+            "authoring",
+            "planning",
+            "implementation",
+            "review",
+            "testing",
+            "orchestration",
+            "research",
+            "operations",
+            "compliance"
+          ]
+        },
+        "authority_scope": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "accepted_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["task_scope", "deliverables", "acceptance_criteria"],
+          "properties": {
+            "task_scope": { "$ref": "#/$defs/non_empty_string_list" },
+            "deliverables": { "$ref": "#/$defs/non_empty_string_list" },
+            "acceptance_criteria": { "$ref": "#/$defs/non_empty_string_list" }
+          }
+        },
+        "constraints": { "$ref": "#/$defs/non_empty_string_list" },
+        "resource_budget": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["retry_limit", "escalation_threshold"],
+          "properties": {
+            "retry_limit": { "type": "integer", "minimum": 0 },
+            "escalation_threshold": { "type": "string", "minLength": 1 },
+            "time_limit": { "type": "string", "minLength": 1 },
+            "token_limit": { "type": "integer", "minimum": 0 },
+            "tool_call_limit": { "type": "integer", "minimum": 0 },
+            "cost_limit": { "type": "string", "minLength": 1 }
+          }
+        },
+        "tool_permissions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/tool_permission" }
+        },
+        "escalation_protocol": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["default_level", "levels"],
+          "properties": {
+            "default_level": { "type": "integer", "minimum": 0 },
+            "levels": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["level", "trigger", "action"],
+                "properties": {
+                  "level": { "type": "integer", "minimum": 0 },
+                  "trigger": { "type": "string", "minLength": 1 },
+                  "action": { "type": "string", "minLength": 1 }
+                }
+              }
+            }
+          }
+        },
+        "trace": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["trace_id", "activation_timestamp"],
+          "properties": {
+            "trace_id": { "type": "string", "minLength": 1 },
+            "activation_timestamp": { "$ref": "#/$defs/rfc3339_utc" }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "agent_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "rfc3339_utc": {
+      "type": "string",
+      "description": "UTC timestamp at whole-second precision. Fractional seconds are intentionally rejected for deterministic canonical output.",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "non_empty_string_list": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "tool_permission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tool_name",
+        "permission",
+        "scope",
+        "approval_required",
+        "audit_required"
+      ],
+      "properties": {
+        "tool_name": { "type": "string", "minLength": 1 },
+        "permission": {
+          "enum": ["deny", "read", "write", "execute", "administer"]
+        },
+        "scope": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "approval_required": { "type": "boolean" },
+        "audit_required": { "type": "boolean" }
+      }
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/economic-efficiency.schema.json",
+  "title": "Economic Efficiency",
+  "type": "object",
+  "required": ["optimization_objective", "targets", "policies"],
+  "additionalProperties": false,
+  "properties": {
+    "optimization_objective": {
+      "type": "string",
+      "enum": [
+        "cost-per-task",
+        "cost-per-token",
+        "cost-per-successful-task",
+        "latency",
+        "throughput",
+        "balanced"
+      ]
+    },
+    "targets": {
+      "type": "object",
+      "required": ["max_cost_per_task_usd", "target_task_success_rate"],
+      "additionalProperties": false,
+      "properties": {
+        "max_cost_per_task_usd": { "type": "number", "minimum": 0 },
+        "max_tokens_per_task": { "type": "integer", "minimum": 1 },
+        "target_task_success_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_retry_cost_multiplier": { "type": "number", "minimum": 1 }
+      }
+    },
+    "policies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "description", "trigger", "action"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "description": { "type": "string" },
+          "trigger": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "action": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "budget_alerts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["threshold_usd", "action"],
+        "properties": {
+          "threshold_usd": { "type": "number", "minimum": 0 },
+          "action": { "type": "string" }
+        }
+      }
+    }
+  }
+}

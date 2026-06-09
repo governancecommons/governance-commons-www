@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/ons/v/1.2.0/schemas/ons-conformance.schema.json",
+  "title": "ONS Conformance Profile",
+  "description": "Schema for project-level ons_conformance declarations.",
+  "type": "object",
+  "required": ["ons_conformance"],
+  "additionalProperties": false,
+  "properties": {
+    "ons_conformance": {
+      "type": "object",
+      "required": [
+        "ons_version",
+        "compatibility_mode",
+        "product_root",
+        "governance_record_name",
+        "governance_directory",
+        "cluster_registry",
+        "token_prefix"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ons_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+          "description": "ONS specification version this profile conforms to."
+        },
+        "compatibility_mode": {
+          "enum": ["strict", "standard", "advisory"],
+          "description": "Validation profile: strict fails on any finding, standard fails on errors, advisory never fails."
+        },
+        "status": {
+          "enum": ["active", "reference", "draft", "deprecated"],
+          "description": "Lifecycle status of this conformance declaration."
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-readable description of this conformance profile."
+        },
+        "product_root": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*$",
+          "description": "Top-level namespace root for this project (e.g. eco, atlas)."
+        },
+        "governance_record_name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Name used for governance records in this project (e.g. PASS)."
+        },
+        "governance_directory": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Repository-relative path to the governance records directory."
+        },
+        "cluster_registry": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Repository-relative path to the cluster registry file."
+        },
+        "token_prefix": {
+          "type": "string",
+          "pattern": "^--[a-z][a-z0-9-]*$",
+          "description": "CSS custom property prefix for this project's design tokens (e.g. --eco)."
+        },
+        "namespace_roots": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Declared product namespace roots (e.g. eco.ui, eco.ai)."
+        },
+        "token_registry": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Repository-relative path to the token registry or token list file."
+        },
+        "implementation_reference": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Repository-relative path to the reference validator or linter implementation."
+        },
+        "source_passes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "ONS governance IDs (e.g. ONS.00) that this conformance profile was derived from."
+        },
+        "naming_examples": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "Optional map of domain names to canonical example values for this project."
+        }
+      }
+    }
+  }
+}

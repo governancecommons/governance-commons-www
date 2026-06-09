@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/matrix-composition.schema.json",
+  "title": "Matrix Composition",
+  "description": "Defines how a base matrix may be composed with overlays, profiles, and section imports.",
+  "type": "object",
+  "required": ["composition_version", "merge_strategy"],
+  "additionalProperties": false,
+  "properties": {
+    "composition_version": { "type": "string" },
+    "extends": { "type": ["string", "null"] },
+    "merge_strategy": {
+      "type": "string",
+      "enum": ["replace", "deep-merge", "strategic-merge"]
+    },
+    "active_profiles": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "profiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "description"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "enabled_sections": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "overlay_refs": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "section_imports": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "overlays": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "description", "target"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "description": { "type": "string" },
+          "target": {
+            "type": "string",
+            "enum": ["base", "environment", "business-unit", "profile"]
+          },
+          "ref": { "type": "string" },
+          "merge_strategy": {
+            "type": "string",
+            "enum": ["replace", "deep-merge", "strategic-merge"]
+          },
+          "precedence": { "type": "integer", "minimum": 1 }
+        }
+      }
+    }
+  }
+}

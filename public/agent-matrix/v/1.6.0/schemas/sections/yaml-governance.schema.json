@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/yaml-governance.schema.json",
+  "title": "YAML Governance",
+  "description": "YAML authoring rules aligned with agent-dossier yaml_governance_block.",
+  "type": "object",
+  "required": [
+    "yaml_version",
+    "encoding",
+    "indentation",
+    "tabs_prohibited",
+    "anchors_and_aliases",
+    "duplicate_keys",
+    "extension_fields"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "yaml_version": { "type": "string" },
+    "encoding": { "type": "string" },
+    "indentation": { "type": "string" },
+    "tabs_prohibited": { "type": "boolean" },
+    "anchors_and_aliases": {
+      "type": "string",
+      "enum": ["prohibited", "allowed"]
+    },
+    "duplicate_keys": {
+      "type": "string",
+      "enum": ["prohibited", "allowed"]
+    },
+    "key_ordering": { "type": "string" },
+    "extension_fields": {
+      "type": "object",
+      "required": ["pattern", "single_segment_reserved", "recommended_form"],
+      "additionalProperties": false,
+      "properties": {
+        "pattern": { "type": "string" },
+        "single_segment_reserved": { "type": "boolean" },
+        "recommended_form": { "type": "string" },
+        "reserved": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "validation_modes": {
+      "type": "object",
+      "properties": {
+        "advisory": { "$ref": "#/$defs/validation_mode" },
+        "standard": { "$ref": "#/$defs/validation_mode" },
+        "strict": { "$ref": "#/$defs/validation_mode" }
+      }
+    },
+    "default_validation_mode": {
+      "type": "string",
+      "enum": ["advisory", "standard", "strict"]
+    }
+  },
+  "$defs": {
+    "validation_mode": {
+      "type": "object",
+      "required": ["errors_block", "warnings_block"],
+      "additionalProperties": false,
+      "properties": {
+        "errors_block": { "type": "boolean" },
+        "warnings_block": { "type": "boolean" }
+      }
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/upgrade-paths.schema.json",
+  "title": "Agent Upgrade Paths",
+  "type": "object",
+  "required": ["matrix_upgrade_policy", "agent_upgrade_strategies", "deprecation_policy"],
+  "additionalProperties": false,
+  "properties": {
+    "matrix_upgrade_policy": {
+      "type": "object",
+      "required": ["patch_upgrade", "minor_upgrade", "major_upgrade"],
+      "additionalProperties": false,
+      "properties": {
+        "patch_upgrade": { "$ref": "#/$defs/upgrade_policy_entry" },
+        "minor_upgrade": { "$ref": "#/$defs/upgrade_policy_entry" },
+        "major_upgrade": { "$ref": "#/$defs/upgrade_policy_entry" }
+      }
+    },
+    "agent_upgrade_strategies": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "description", "downtime", "suitable_for"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "downtime": { "type": "string" },
+          "suitable_for": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["patch", "minor", "major"]
+            }
+          },
+          "steps": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "canary_percentage": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "promotion_criteria": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "deprecation_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "notice_period_major_versions": { "type": "integer", "minimum": 1 },
+        "notice_period_minor_versions": { "type": "integer", "minimum": 1 },
+        "deprecation_signal": { "type": "string" },
+        "sunset_signal": { "type": "string" }
+      }
+    }
+  },
+  "$defs": {
+    "upgrade_policy_entry": {
+      "type": "object",
+      "required": ["requires_validation", "requires_human_approval", "rollback_window_hours"],
+      "additionalProperties": false,
+      "properties": {
+        "requires_validation": { "type": "boolean" },
+        "requires_human_approval": { "type": "boolean" },
+        "rollback_window_hours": { "type": "integer", "minimum": 0 },
+        "migration_plan_required": { "type": "boolean" }
+      }
+    }
+  }
+}

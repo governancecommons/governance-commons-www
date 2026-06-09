@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.6.0/schemas/agent-matrix.schema.json",
+  "title": "Agent Capability & Efficiency Matrix",
+  "description": "Root schema for the canonical Agent Matrix specification (v1.6.0)",
+  "type": "object",
+  "required": [
+    "versioning",
+    "agent_profiles",
+    "capability_matrix",
+    "task_routing_rules",
+    "economic_efficiency",
+    "compute_cost_model",
+    "sku_capability_overrides",
+    "agent_trust_levels",
+    "agent_specializations",
+    "agent_limitations",
+    "agent_handoff_rules",
+    "agent_failure_modes",
+    "agent_recovery_rules",
+    "agent_safety_constraints",
+    "agent_dependency_graph",
+    "agent_interoperability_rules",
+    "agent_validation_requirements",
+    "agent_observability_signals",
+    "agent_state_model",
+    "agent_upgrade_paths",
+    "yaml_governance",
+    "agent_escalation_protocol",
+    "anti_stall_rules"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "versioning": {
+      "$ref": "sections/versioning.schema.json"
+    },
+    "agent_profiles": {
+      "type": "array",
+      "description": "Canonical agent archetypes recognized by the matrix.",
+      "minItems": 1,
+      "items": { "$ref": "sections/agent-profiles.schema.json" }
+    },
+    "capability_matrix": {
+      "$ref": "sections/capability-matrix.schema.json"
+    },
+    "task_routing_rules": {
+      "$ref": "sections/task-routing-rules.schema.json"
+    },
+    "economic_efficiency": {
+      "$ref": "sections/economic-efficiency.schema.json"
+    },
+    "compute_cost_model": {
+      "$ref": "sections/compute-cost-model.schema.json"
+    },
+    "sku_capability_overrides": {
+      "type": "array",
+      "items": { "$ref": "sections/sku-capability-overrides.schema.json" }
+    },
+    "agent_trust_levels": {
+      "$ref": "sections/trust-levels.schema.json"
+    },
+    "agent_specializations": {
+      "type": "array",
+      "items": { "$ref": "sections/agent-specializations.schema.json" }
+    },
+    "agent_limitations": {
+      "type": "array",
+      "items": { "$ref": "sections/agent-limitations.schema.json" }
+    },
+    "agent_handoff_rules": {
+      "$ref": "sections/handoff-rules.schema.json"
+    },
+    "agent_failure_modes": {
+      "$ref": "sections/failure-modes.schema.json"
+    },
+    "agent_recovery_rules": {
+      "$ref": "sections/recovery-rules.schema.json"
+    },
+    "agent_safety_constraints": {
+      "$ref": "sections/safety-constraints.schema.json"
+    },
+    "agent_dependency_graph": {
+      "$ref": "sections/dependency-graph.schema.json"
+    },
+    "agent_interoperability_rules": {
+      "$ref": "sections/interoperability-rules.schema.json"
+    },
+    "agent_validation_requirements": {
+      "$ref": "sections/validation-requirements.schema.json"
+    },
+    "agent_observability_signals": {
+      "$ref": "sections/observability-signals.schema.json"
+    },
+    "agent_state_model": {
+      "$ref": "sections/state-model.schema.json"
+    },
+    "agent_upgrade_paths": {
+      "$ref": "sections/upgrade-paths.schema.json"
+    },
+    "yaml_governance": {
+      "$ref": "sections/yaml-governance.schema.json"
+    },
+    "agent_escalation_protocol": {
+      "$ref": "sections/escalation-protocol.schema.json"
+    },
+    "anti_stall_rules": {
+      "$ref": "sections/anti-stall-rules.schema.json"
+    },
+    "matrix_composition": {
+      "$ref": "sections/matrix-composition.schema.json",
+      "description": "Optional. Matrix overlays, named profiles, section imports, and inheritance semantics."
+    },
+    "sla_qos": {
+      "$ref": "sections/sla-qos.schema.json",
+      "description": "Optional. Formal service-level objectives, indicators, error budgets, and breach events."
+    },
+    "cloudevents_binding": {
+      "$ref": "sections/cloudevents-binding.schema.json",
+      "description": "Optional. CloudEvents envelope mapping for portable event emission."
+    },
+    "agent_registry": {
+      "$ref": "sections/agent-registry.schema.json",
+      "description": "Optional. Runtime agent registry, discovery, health, readiness, and warm-standby policy."
+    },
+    "identity_lifecycle": {
+      "$ref": "sections/identity-lifecycle.schema.json",
+      "description": "Optional. General agent identity, authentication, key lifecycle, and federation policy."
+    },
+    "prompt_context_governance": {
+      "$ref": "sections/prompt-context-governance.schema.json",
+      "description": "Optional. Prompt versioning, context schema, injection defenses, RAG, and caching controls."
+    },
+    "audit_integrity": {
+      "$ref": "sections/audit-integrity.schema.json",
+      "description": "Optional. Tamper-evident audit log hash chaining, export, retention, and verification."
+    },
+    "a2a_binding": {
+      "$ref": "sections/a2a-binding.schema.json",
+      "description": "Optional. Agent-to-Agent protocol binding for cross-vendor discovery, negotiation, and task exchange."
+    },
+    "federated_orchestration": {
+      "$ref": "sections/federated-orchestration.schema.json",
+      "description": "Optional. Multi-orchestrator topology, leadership, cross-cluster handoff, and data residency policy."
+    },
+    "compliance_mapping": {
+      "$ref": "sections/compliance-mapping.schema.json",
+      "description": "Optional. EU AI Act, NIST AI RMF, and other compliance framework mappings."
+    },
+    "runtime_api_service": {
+      "$ref": "sections/runtime-api-service.schema.json",
+      "description": "Optional. Runtime API surface, SDK contract, server deployment, and compatibility policy."
+    },
+    "mcp": {
+      "$ref": "sections/mcp.schema.json",
+      "description": "Optional. MCP (Model Context Protocol) alignment. Omit if the deployment does not use MCP."
+    },
+    "streaming_output": {
+      "$ref": "sections/streaming-output.schema.json",
+      "description": "Optional. Streaming output envelope, sequence numbering, terminal chunk marker, and backpressure policy."
+    },
+    "prompt_injection_defense": {
+      "$ref": "sections/prompt-injection-defense.schema.json",
+      "description": "Optional. Prompt injection attack taxonomy, detection hook contract, rejection rules, and audit obligations."
+    },
+    "workflow_patterns": {
+      "$ref": "sections/workflow-patterns.schema.json",
+      "description": "Optional. Named, versioned workflow pattern library for reusable multi-agent coordination profiles."
+    }
+  }
+}

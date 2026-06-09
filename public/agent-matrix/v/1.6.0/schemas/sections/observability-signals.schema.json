@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/observability-signals.schema.json",
+  "title": "Agent Observability Signals",
+  "type": "object",
+  "required": ["signal_protocol", "required_signals", "retention_policy"],
+  "additionalProperties": false,
+  "properties": {
+    "signal_protocol": {
+      "type": "string",
+      "enum": ["opentelemetry", "prometheus", "custom"]
+    },
+    "required_signals": {
+      "type": "object",
+      "required": ["traces", "metrics", "logs"],
+      "additionalProperties": false,
+      "properties": {
+        "traces": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["signal_id", "name", "description", "required_attributes"],
+            "additionalProperties": false,
+            "properties": {
+              "signal_id": { "type": "string" },
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "event_type": { "type": "string" },
+              "required_attributes": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["signal_id", "name", "type", "unit", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "signal_id": { "type": "string" },
+              "name": { "type": "string" },
+              "type": {
+                "type": "string",
+                "enum": ["gauge", "counter", "histogram", "summary"]
+              },
+              "unit": { "type": "string" },
+              "description": { "type": "string" },
+              "labels": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "logs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["signal_id", "name", "level", "required_fields"],
+            "additionalProperties": false,
+            "properties": {
+              "signal_id": { "type": "string" },
+              "name": { "type": "string" },
+              "level": {
+                "type": "string",
+                "enum": ["debug", "info", "warning", "error", "critical", "DEBUG", "INFO", "WARN", "ERROR", "CRITICAL"]
+              },
+              "required_fields": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "optional_signals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "retention_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "traces_days": { "type": "integer", "minimum": 1 },
+        "metrics_days": { "type": "integer", "minimum": 1 },
+        "logs_days": { "type": "integer", "minimum": 1 },
+        "safety_violation_logs_days": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

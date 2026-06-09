@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/agent-registry.schema.json",
+  "title": "Agent Registry and Discovery",
+  "description": "Runtime catalog for live agent instances, capability advertisement, health, readiness, and warm pools.",
+  "type": "object",
+  "required": [
+    "registry_endpoint",
+    "registration_policy",
+    "cluster_advertisement",
+    "agent_record_schema",
+    "discovery",
+    "discovery_protocol",
+    "health_model"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "registry_endpoint": { "type": "string" },
+    "registration_policy": {
+      "type": "object",
+      "required": ["mode", "requires_identity_attestation", "ttl_seconds"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["static", "self-register", "orchestrator-register"]
+        },
+        "requires_identity_attestation": { "type": "boolean" },
+        "ttl_seconds": { "type": "integer", "minimum": 1 },
+        "renewal_before_expiry_seconds": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "cluster_advertisement": {
+      "type": "object",
+      "required": [
+        "ons_cluster_registry",
+        "required_cluster_fields",
+        "advertisement_ttl_seconds",
+        "signature_required",
+        "record_id_pattern"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ons_cluster_registry": { "type": "string", "minLength": 1 },
+        "required_cluster_fields": {
+          "type": "array",
+          "minItems": 4,
+          "items": { "type": "string", "minLength": 1 },
+          "contains": { "const": "cluster" }
+        },
+        "advertisement_ttl_seconds": { "type": "integer", "minimum": 1 },
+        "signature_required": { "const": true },
+        "record_id_pattern": { "type": "string", "minLength": 1 }
+      }
+    },
+    "agent_record_schema": {
+      "type": "object",
+      "required": [
+        "required_fields",
+        "capability_claims_require_declared_at",
+        "dossier_ref_required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "required_fields": {
+          "type": "array",
+          "minItems": 8,
+          "items": { "type": "string", "minLength": 1 },
+          "contains": { "const": "capability_claims" }
+        },
+        "capability_claims_require_declared_at": { "const": true },
+        "dossier_ref_required": { "const": true }
+      }
+    },
+    "discovery": {
+      "type": "object",
+      "required": ["query_fields", "selection_order"],
+      "additionalProperties": false,
+      "properties": {
+        "query_fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "selection_order": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "capability_advertisement": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "required": { "type": "boolean" },
+            "refresh_interval_seconds": { "type": "integer", "minimum": 1 },
+            "signed": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "health_model": {
+      "type": "object",
+      "required": ["states", "readiness_endpoint", "liveness_endpoint"],
+      "additionalProperties": false,
+      "properties": {
+        "states": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": ["ready", "busy", "degraded", "draining", "unavailable"]
+          }
+        },
+        "readiness_endpoint": { "type": "string" },
+        "liveness_endpoint": { "type": "string" },
+        "required_health_fields": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "discovery_protocol": {
+      "type": "object",
+      "required": ["steps", "failure_modes", "cache_policy"],
+      "additionalProperties": false,
+      "properties": {
+        "steps": {
+          "type": "array",
+          "minItems": 5,
+          "items": {
+            "type": "object",
+            "required": ["step", "name", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "step": { "type": "integer", "minimum": 1 },
+              "name": { "type": "string", "minLength": 1 },
+              "description": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "failure_modes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "cache_policy": {
+          "type": "object",
+          "required": ["cache_ttl_seconds", "revalidate_on_handoff"],
+          "additionalProperties": false,
+          "properties": {
+            "cache_ttl_seconds": { "type": "integer", "minimum": 1 },
+            "revalidate_on_handoff": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "warm_standby_pools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["agent_profile", "min_ready_instances", "scale_signal"],
+        "additionalProperties": false,
+        "properties": {
+          "agent_profile": { "type": "string" },
+          "min_ready_instances": { "type": "integer", "minimum": 0 },
+          "max_instances": { "type": "integer", "minimum": 1 },
+          "scale_signal": { "type": "string" }
+        }
+      }
+    }
+  }
+}

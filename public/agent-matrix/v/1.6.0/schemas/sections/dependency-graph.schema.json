@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/dependency-graph.schema.json",
+  "title": "Agent Dependency Graph",
+  "type": "object",
+  "required": ["graph_format", "nodes", "edges"],
+  "additionalProperties": false,
+  "properties": {
+    "graph_format": {
+      "type": "string",
+      "enum": ["adjacency-list"]
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "type"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["coordinator", "specialist", "infrastructure", "escalation"]
+          }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "relationship", "required"],
+        "additionalProperties": false,
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "relationship": {
+            "type": "string",
+            "enum": [
+              "delegates-to",
+              "escalates-to",
+              "submits-to",
+              "gates",
+              "validated-by",
+              "observed-by",
+              "reads-writes-via"
+            ]
+          },
+          "required": { "type": "boolean" }
+        }
+      }
+    },
+    "critical_paths": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "sla_minutes"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "path": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "sla_minutes": { "type": "integer", "minimum": 1 }
+        }
+      }
+    }
+  }
+}

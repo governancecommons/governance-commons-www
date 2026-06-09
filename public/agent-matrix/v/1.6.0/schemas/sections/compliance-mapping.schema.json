@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/compliance-mapping.schema.json",
+  "title": "Compliance Mapping",
+  "description": "Maps matrix controls to external governance frameworks such as NIST AI RMF and EU AI Act.",
+  "type": "object",
+  "required": ["frameworks", "control_mappings", "evidence"],
+  "additionalProperties": false,
+  "properties": {
+    "frameworks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "version", "applicability"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "version": { "type": "string" },
+          "applicability": {
+            "type": "string",
+            "enum": ["informational", "required", "conditional"]
+          }
+        }
+      }
+    },
+    "control_mappings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["framework_id", "control_id", "matrix_sections", "implementation_status"],
+        "additionalProperties": false,
+        "properties": {
+          "framework_id": { "type": "string" },
+          "control_id": { "type": "string" },
+          "control_name": { "type": "string" },
+          "matrix_sections": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" }
+          },
+          "implementation_status": {
+            "type": "string",
+            "enum": ["mapped", "partially-mapped", "not-applicable", "gap"]
+          },
+          "notes": { "type": "string" },
+          "adopter_extension_point": {
+            "type": "object",
+            "description": "Structured guidance for adopters who must supply deployment-specific controls to satisfy partially-mapped obligations.",
+            "additionalProperties": false,
+            "properties": {
+              "description": { "type": "string" },
+              "required_adopter_artifacts": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "reference_sections": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["evidence_store", "required_artifacts"],
+      "additionalProperties": false,
+      "properties": {
+        "evidence_store": { "type": "string" },
+        "required_artifacts": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "review_cadence_days": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

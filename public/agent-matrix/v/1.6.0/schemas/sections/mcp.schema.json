@@ -1,0 +1,529 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/mcp.schema.json",
+  "title": "MCP (Model Context Protocol) Alignment",
+  "description": "Governs how agents connect to and use MCP servers. MCP spec: 2025-03-26. Optional section — omit if the deployment does not use MCP.",
+  "type": "object",
+  "required": [
+    "protocol_version",
+    "enabled",
+    "server_registry",
+    "client_profiles",
+    "capability_mapping",
+    "transport_config",
+    "security_model",
+    "sampling_policy"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "protocol_version": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "MCP protocol version in YYYY-MM-DD format."
+    },
+    "enabled": {
+      "type": "boolean"
+    },
+    "specification_reference": {
+      "type": "string",
+      "format": "uri"
+    },
+
+    "server_registry": {
+      "type": "object",
+      "required": ["servers"],
+      "additionalProperties": false,
+      "properties": {
+        "servers": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/mcp_server" }
+        }
+      }
+    },
+
+    "client_profiles": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/mcp_client_profile" }
+    },
+
+    "capability_mapping": {
+      "type": "object",
+      "required": ["mappings"],
+      "additionalProperties": false,
+      "properties": {
+        "mappings": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/capability_mapping_entry" }
+        }
+      }
+    },
+
+    "transport_config": {
+      "$ref": "#/$defs/transport_config"
+    },
+
+    "security_model": {
+      "$ref": "#/$defs/security_model"
+    },
+
+    "sampling_policy": {
+      "$ref": "#/$defs/sampling_policy"
+    },
+
+    "notification_handling": {
+      "$ref": "#/$defs/notification_handling"
+    }
+  },
+
+  "$defs": {
+
+    "mcp_server": {
+      "type": "object",
+      "required": [
+        "server_id",
+        "display_name",
+        "transport",
+        "min_trust_level",
+        "server_capabilities"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "server_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "description": "Unique kebab-case server identifier."
+        },
+        "display_name": { "type": "string" },
+        "description": { "type": "string" },
+        "transport": {
+          "type": "string",
+          "enum": ["stdio", "http-sse", "streamable-http"]
+        },
+        "command": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Command and arguments for stdio transport."
+        },
+        "args": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "endpoint": {
+          "type": "string",
+          "format": "uri",
+          "description": "Server base URL for HTTP transports."
+        },
+        "min_trust_level": {
+          "type": "string",
+          "enum": ["T0", "T1", "T2", "T3", "T4"]
+        },
+        "server_capabilities": {
+          "type": "object",
+          "required": ["tools", "resources", "prompts", "sampling", "roots", "logging"],
+          "additionalProperties": false,
+          "properties": {
+            "tools":     { "type": "boolean" },
+            "resources": { "type": "boolean" },
+            "prompts":   { "type": "boolean" },
+            "sampling":  { "type": "boolean" },
+            "roots":     { "type": "boolean" },
+            "logging":   { "type": "boolean" }
+          }
+        },
+        "declared_tools": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/declared_tool" }
+        },
+        "declared_resources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/declared_resource" }
+        },
+        "declared_prompts": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/declared_prompt" }
+        }
+      }
+    },
+
+    "declared_tool": {
+      "type": "object",
+      "required": ["name", "matrix_capability", "min_trust_level", "audit_required", "requires_gatekeeper"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Exact MCP tool name as declared by the server."
+        },
+        "description": { "type": "string" },
+        "matrix_capability": {
+          "type": "string",
+          "pattern": "^c[1-4]\\.[a-z][a-z0-9-]*$",
+          "description": "Matrix capability ID this tool exercises."
+        },
+        "min_trust_level": {
+          "type": "string",
+          "enum": ["T0", "T1", "T2", "T3", "T4"]
+        },
+        "audit_required": { "type": "boolean" },
+        "requires_gatekeeper": { "type": "boolean" },
+        "human_approval_required": { "type": "boolean" },
+        "rate_limit_per_minute": { "type": "integer", "minimum": 1 },
+        "execution_timeout_seconds": { "type": "integer", "minimum": 1 },
+        "input_schema": {
+          "type": "object",
+          "description": "JSON Schema (draft 2020-12) for tool input parameters.",
+          "additionalProperties": true
+        }
+      }
+    },
+
+    "declared_resource": {
+      "type": "object",
+      "required": ["uri_pattern", "name", "min_trust_level"],
+      "additionalProperties": false,
+      "properties": {
+        "uri_pattern": {
+          "type": "string",
+          "description": "URI pattern with {placeholder} segments."
+        },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "mime_types": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "min_trust_level": {
+          "type": "string",
+          "enum": ["T0", "T1", "T2", "T3", "T4"]
+        }
+      }
+    },
+
+    "declared_prompt": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "arguments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "required": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+
+    "mcp_client_profile": {
+      "type": "object",
+      "required": ["agent_profile_id", "connected_servers", "approved_tools", "max_tool_calls_per_task"],
+      "additionalProperties": false,
+      "properties": {
+        "agent_profile_id": { "type": "string" },
+        "connected_servers": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "approved_tools": {
+          "type": "object",
+          "description": "Map of server_id to list of approved tool names.",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "approved_resources": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "uri_patterns": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "mime_type_filter": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "max_tool_calls_per_task": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+
+    "capability_mapping_entry": {
+      "type": "object",
+      "required": ["capability_id", "tool_name_patterns", "required_trust"],
+      "additionalProperties": false,
+      "properties": {
+        "capability_id": {
+          "type": "string",
+          "pattern": "^c[1-4]\\.[a-z][a-z0-9-]*$"
+        },
+        "tool_name_patterns": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "required_trust": {
+          "type": "string",
+          "enum": ["T0", "T1", "T2", "T3", "T4"]
+        }
+      }
+    },
+
+    "transport_config": {
+      "type": "object",
+      "required": ["default_transport", "transports", "message_format", "max_message_size_bytes"],
+      "additionalProperties": false,
+      "properties": {
+        "default_transport": {
+          "type": "string",
+          "enum": ["stdio", "http-sse", "streamable-http"]
+        },
+        "transports": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "stdio": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "process_timeout_ms": { "type": "integer", "minimum": 1 },
+                "max_concurrent_processes": { "type": "integer", "minimum": 1 },
+                "restart_on_crash": { "type": "boolean" },
+                "environment_passthrough": { "type": "array", "items": { "type": "string" } }
+              }
+            },
+            "http-sse": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "deprecated": { "type": "boolean" },
+                "sunset_date": { "type": "string", "format": "date" },
+                "migration_target": { "type": "string" }
+              }
+            },
+            "streamable-http": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "endpoint_path": { "type": "string" },
+                "connection_timeout_ms": { "type": "integer", "minimum": 1 },
+                "request_timeout_ms": { "type": "integer", "minimum": 1 },
+                "idle_timeout_ms": { "type": "integer", "minimum": 1 },
+                "max_retries": { "type": "integer", "minimum": 0 },
+                "retry_backoff_ms": { "type": "integer", "minimum": 0 },
+                "tls_required": { "type": "boolean" },
+                "min_tls_version": { "type": "string" },
+                "compression": { "type": "string" }
+              }
+            }
+          }
+        },
+        "message_format": {
+          "type": "string",
+          "enum": ["json-rpc-2.0"]
+        },
+        "max_message_size_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "capability_negotiation": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "reject_unapproved_server_capabilities": { "type": "boolean" },
+            "require_protocol_version_match": { "type": "boolean" },
+            "client_info": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "version": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "security_model": {
+      "type": "object",
+      "required": [
+        "auth_method",
+        "token_format",
+        "token_issuer",
+        "token_audience",
+        "token_ttl_seconds",
+        "trust_to_permission_mapping",
+        "high_risk_tool_patterns",
+        "server_verification",
+        "tool_response_limits"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "auth_method": { "type": "string", "enum": ["bearer-token", "mtls", "api-key", "none"] },
+        "token_format": { "type": "string" },
+        "token_issuer": { "type": "string" },
+        "token_audience": { "type": "string" },
+        "token_ttl_seconds": { "type": "integer", "minimum": 60 },
+        "token_rotation_before_expiry_seconds": { "type": "integer", "minimum": 0 },
+        "token_signing_algorithm": { "type": "string" },
+        "trust_to_permission_mapping": {
+          "type": "object",
+          "required": ["T0", "T1", "T2", "T3", "T4"],
+          "additionalProperties": false,
+          "properties": {
+            "T0": { "$ref": "#/$defs/trust_permission_entry" },
+            "T1": { "$ref": "#/$defs/trust_permission_entry" },
+            "T2": { "$ref": "#/$defs/trust_permission_entry" },
+            "T3": { "$ref": "#/$defs/trust_permission_entry" },
+            "T4": { "$ref": "#/$defs/trust_permission_entry" }
+          }
+        },
+        "high_risk_tool_patterns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["pattern", "min_trust_required", "gatekeeper_required", "human_approval_required"],
+            "additionalProperties": false,
+            "properties": {
+              "pattern": { "type": "string" },
+              "min_trust_required": { "type": "string", "enum": ["T0","T1","T2","T3","T4"] },
+              "gatekeeper_required": { "type": "boolean" },
+              "human_approval_required": { "type": "boolean" }
+            }
+          }
+        },
+        "server_verification": {
+          "type": "object",
+          "required": ["verify_server_identity", "method", "reject_self_signed"],
+          "additionalProperties": false,
+          "properties": {
+            "verify_server_identity": { "type": "boolean" },
+            "method": { "type": "string", "enum": ["tls-certificate", "mtls", "none"] },
+            "pin_server_certificates": { "type": "boolean" },
+            "reject_self_signed": { "type": "boolean" }
+          }
+        },
+        "tool_response_limits": {
+          "type": "object",
+          "required": ["max_response_size_bytes", "truncate_on_exceed"],
+          "additionalProperties": false,
+          "properties": {
+            "max_response_size_bytes": { "type": "integer", "minimum": 1 },
+            "truncate_on_exceed": { "type": "boolean" },
+            "truncation_marker": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "trust_permission_entry": {
+      "type": "object",
+      "required": ["server_connection", "tool_execution", "resource_read", "server_management"],
+      "additionalProperties": false,
+      "properties": {
+        "server_connection": { "type": "string" },
+        "tool_execution": { "type": "string" },
+        "resource_read": { "type": "string" },
+        "server_management": { "type": "string" }
+      }
+    },
+
+    "sampling_policy": {
+      "type": "object",
+      "required": ["enabled", "min_trust_level", "max_tokens_per_request", "max_requests_per_task", "cost_accounting"],
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "min_trust_level": { "type": "string", "enum": ["T0","T1","T2","T3","T4"] },
+        "max_tokens_per_request": { "type": "integer", "minimum": 1 },
+        "max_requests_per_task": { "type": "integer", "minimum": 0 },
+        "cumulative_token_budget_per_task": { "type": "integer", "minimum": 1 },
+        "cost_accounting": { "type": "boolean" },
+        "model_preferences": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["model_hint", "priority"],
+            "additionalProperties": false,
+            "properties": {
+              "model_hint": { "type": "string" },
+              "priority": { "type": "integer", "minimum": 1 },
+              "cost_class": { "type": "string", "enum": ["low", "medium", "high"] }
+            }
+          }
+        },
+        "require_orchestrator_approval": { "type": "boolean" },
+        "log_all_sampling_requests": { "type": "boolean" },
+        "prohibited_contexts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["context_tag"],
+            "additionalProperties": false,
+            "properties": {
+              "context_tag": { "type": "string" }
+            }
+          }
+        },
+        "budget_ceiling_usd": { "type": "number", "minimum": 0 }
+      }
+    },
+
+    "notification_handling": {
+      "type": "object",
+      "required": ["notifications", "unrecognized_notification_policy"],
+      "additionalProperties": false,
+      "properties": {
+        "notifications": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type", "action", "log_level"],
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "tools/list_changed",
+                  "resources/list_changed",
+                  "resources/updated",
+                  "logging/message",
+                  "initialized"
+                ]
+              },
+              "action": { "type": "string" },
+              "log_level": {
+                "type": "string",
+                "enum": ["debug", "info", "warning", "error", "critical", "passthrough"]
+              }
+            }
+          }
+        },
+        "unrecognized_notification_policy": {
+          "type": "string",
+          "enum": ["log-and-ignore", "reject", "escalate"]
+        }
+      }
+    }
+  }
+}

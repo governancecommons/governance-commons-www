@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.5.0/schemas/sections/streaming-output.schema.json",
+  "title": "StreamingOutput",
+  "description": "JSON Schema for the streaming_output section of the agent-matrix (GC-3-B-04). Covers chunk envelope structure, sequence numbering, terminal chunk semantics, and backpressure protocol.",
+  "type": "object",
+  "required": [
+    "chunk_envelope",
+    "sequence_numbering",
+    "terminal_chunk",
+    "backpressure",
+    "conformance_rules"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "description": {
+      "type": "string"
+    },
+    "chunk_envelope": {
+      "type": "object",
+      "required": ["required_fields", "optional_fields", "field_definitions", "chunk_id_pattern", "chunk_types"],
+      "additionalProperties": true,
+      "properties": {
+        "required_fields": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "optional_fields": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "field_definitions": {
+          "type": "object",
+          "minProperties": 1
+        },
+        "chunk_id_pattern": {
+          "type": "string",
+          "minLength": 1
+        },
+        "chunk_types": {
+          "type": "object",
+          "required": ["enum", "descriptions"],
+          "properties": {
+            "enum": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 4,
+              "contains": { "const": "data" }
+            },
+            "descriptions": {
+              "type": "object",
+              "minProperties": 4
+            }
+          }
+        }
+      }
+    },
+    "sequence_numbering": {
+      "type": "object",
+      "required": ["reorder_buffer_ms", "gap_action"],
+      "additionalProperties": true,
+      "properties": {
+        "reorder_buffer_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "gap_action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rules": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "terminal_chunk": {
+      "type": "object",
+      "required": ["rules"],
+      "additionalProperties": true,
+      "properties": {
+        "rules": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "required_fields": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "finish_reasons": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        }
+      }
+    },
+    "backpressure": {
+      "type": "object",
+      "required": ["max_buffered_chunks", "backpressure_ack_timeout_ms", "producer_rules", "consumer_rules"],
+      "additionalProperties": true,
+      "properties": {
+        "max_buffered_chunks": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "backpressure_ack_timeout_ms": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "producer_rules": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "consumer_rules": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        }
+      }
+    },
+    "conformance_rules": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    }
+  }
+}

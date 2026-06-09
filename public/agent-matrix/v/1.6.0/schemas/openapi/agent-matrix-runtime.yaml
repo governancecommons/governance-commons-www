@@ -1,0 +1,449 @@
+openapi: 3.1.0
+info:
+  title: Agent Matrix Runtime API
+  version: 1.4.0
+  summary: Runtime API for serving, composing, validating, routing, and registering Agent Matrix artifacts.
+  description: >
+    Reference OpenAPI contract for runtime_api_service. The API exposes the
+    effective composed matrix, section reads, routing explanations, live agent
+    registry queries, agent registration, and service health.
+  license:
+    name: MIT
+servers:
+  - url: https://matrix.governancecommons.org/v1
+    description: Governance Commons hosted runtime
+  - url: http://localhost:8080/v1
+    description: Local development runtime
+security:
+  - bearerAuth: []
+tags:
+  - name: Matrix
+    description: Effective matrix reads and composition metadata.
+  - name: Routing
+    description: Routing decisions and explanations.
+  - name: Agents
+    description: Live agent registry queries and registration.
+  - name: Health
+    description: Runtime service health.
+paths:
+  /matrix:
+    get:
+      tags: [Matrix]
+      operationId: getMatrix
+      summary: Return the effective composed matrix.
+      parameters:
+        - $ref: "#/components/parameters/Profile"
+        - $ref: "#/components/parameters/Overlay"
+        - $ref: "#/components/parameters/Format"
+      responses:
+        "200":
+          description: Effective matrix response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EffectiveMatrixResponse"
+            application/x-yaml:
+              schema:
+                type: string
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /matrix/sections/{section}:
+    get:
+      tags: [Matrix]
+      operationId: getMatrixSection
+      summary: Return one resolved matrix section.
+      parameters:
+        - name: section
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Top-level matrix section name.
+        - $ref: "#/components/parameters/Profile"
+        - $ref: "#/components/parameters/Overlay"
+      responses:
+        "200":
+          description: Resolved section response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MatrixSectionResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /routing/decision:
+    post:
+      tags: [Routing]
+      operationId: decideRoute
+      summary: Explain the routing decision for a candidate task envelope.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoutingDecisionRequest"
+      responses:
+        "200":
+          description: Routing decision and explanation.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoutingDecisionResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /agents:
+    get:
+      tags: [Agents]
+      operationId: queryAgents
+      summary: Query registered live agent instances.
+      parameters:
+        - name: agent_profile
+          in: query
+          schema:
+            type: string
+        - name: capability_id
+          in: query
+          schema:
+            type: string
+        - name: trust_level
+          in: query
+          schema:
+            $ref: "#/components/schemas/TrustLevel"
+        - name: health_state
+          in: query
+          schema:
+            $ref: "#/components/schemas/AgentHealthState"
+        - name: region
+          in: query
+          schema:
+            type: string
+        - name: tenant_id
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Matching live agent instances.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentQueryResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /agents/register:
+    post:
+      tags: [Agents]
+      operationId: registerAgent
+      summary: Register or renew a live agent instance.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AgentRegistrationRequest"
+      responses:
+        "200":
+          description: Existing registration renewed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentRegistrationResponse"
+        "201":
+          description: New registration created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentRegistrationResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /health:
+    get:
+      tags: [Health]
+      operationId: getHealth
+      summary: Report runtime service health.
+      security: []
+      responses:
+        "200":
+          description: Runtime is healthy.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+        "503":
+          description: Runtime is degraded or unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    Profile:
+      name: profile
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      style: form
+      explode: true
+      description: Named matrix profile or profiles to activate before resolving the effective matrix.
+    Overlay:
+      name: overlay
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      style: form
+      explode: true
+      description: Overlay catalog ID or overlay file reference to apply.
+    Format:
+      name: format
+      in: query
+      schema:
+        type: string
+        enum: [json, yaml]
+        default: json
+  responses:
+    ErrorResponse:
+      description: Error response.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFoundResponse:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+  schemas:
+    EffectiveMatrixResponse:
+      type: object
+      required: [matrix, metadata, validation]
+      properties:
+        matrix:
+          type: object
+          additionalProperties: true
+        metadata:
+          $ref: "#/components/schemas/CompositionMetadata"
+        validation:
+          $ref: "#/components/schemas/ValidationResult"
+    MatrixSectionResponse:
+      type: object
+      required: [section, value, metadata]
+      properties:
+        section:
+          type: string
+        value:
+          additionalProperties: true
+        metadata:
+          $ref: "#/components/schemas/CompositionMetadata"
+    CompositionMetadata:
+      type: object
+      required: [matrix_version, schema_version, profiles, overlays]
+      properties:
+        matrix_version:
+          type: string
+        schema_version:
+          type: string
+        profiles:
+          type: array
+          items:
+            type: string
+        overlays:
+          type: array
+          items:
+            type: string
+        imports:
+          type: array
+          items:
+            type: string
+        effective_hash:
+          type: string
+          description: Hash of the canonical effective matrix document.
+    ValidationResult:
+      type: object
+      required: [valid, findings]
+      properties:
+        valid:
+          type: boolean
+        findings:
+          type: array
+          items:
+            $ref: "#/components/schemas/ValidationFinding"
+    ValidationFinding:
+      type: object
+      required: [path, message]
+      properties:
+        path:
+          type: string
+        message:
+          type: string
+        severity:
+          type: string
+          enum: [error, warning]
+    RoutingDecisionRequest:
+      type: object
+      required: [task]
+      properties:
+        task:
+          $ref: "#/components/schemas/TaskEnvelope"
+        profile:
+          type: array
+          items:
+            type: string
+        overlay:
+          type: array
+          items:
+            type: string
+    TaskEnvelope:
+      type: object
+      required: [task_id, task_type]
+      properties:
+        task_id:
+          type: string
+        task_type:
+          type: string
+        task_criticality:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        required_capabilities:
+          type: array
+          items:
+            type: string
+        context_tokens_estimate:
+          type: integer
+          minimum: 0
+        tenant_id:
+          type: string
+        residency_zone:
+          type: string
+    RoutingDecisionResponse:
+      type: object
+      required: [task_id, assigned_agent_profile, matched_rule, explanation]
+      properties:
+        task_id:
+          type: string
+        assigned_agent_profile:
+          type: string
+        preferred_sku:
+          type: string
+        matched_rule:
+          type: string
+        explanation:
+          type: string
+        constraints:
+          type: object
+          additionalProperties: true
+        alternatives:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    AgentQueryResponse:
+      type: object
+      required: [agents]
+      properties:
+        agents:
+          type: array
+          items:
+            $ref: "#/components/schemas/AgentInstance"
+    AgentRegistrationRequest:
+      type: object
+      required: [agent_instance_id, agent_profile, identity_subject, health_state, advertised_capabilities]
+      properties:
+        agent_instance_id:
+          type: string
+        agent_profile:
+          type: string
+        identity_subject:
+          type: string
+        agent_class:
+          type: string
+        trust_level:
+          $ref: "#/components/schemas/TrustLevel"
+        health_state:
+          $ref: "#/components/schemas/AgentHealthState"
+        advertised_capabilities:
+          type: array
+          items:
+            type: string
+        advertised_capabilities_hash:
+          type: string
+        region:
+          type: string
+        tenant_id:
+          type: string
+        signature:
+          type: string
+    AgentRegistrationResponse:
+      type: object
+      required: [agent_instance_id, registered_until, status]
+      properties:
+        agent_instance_id:
+          type: string
+        registered_until:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [registered, renewed]
+    AgentInstance:
+      allOf:
+        - $ref: "#/components/schemas/AgentRegistrationRequest"
+        - type: object
+          required: [last_heartbeat_at, current_task_count, max_concurrent_tasks]
+          properties:
+            last_heartbeat_at:
+              type: string
+              format: date-time
+            current_task_count:
+              type: integer
+              minimum: 0
+            max_concurrent_tasks:
+              type: integer
+              minimum: 1
+    HealthResponse:
+      type: object
+      required: [status, version]
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded, unavailable]
+        version:
+          type: string
+        matrix_version:
+          type: string
+        checks:
+          type: object
+          additionalProperties:
+            type: string
+    ErrorResponse:
+      type: object
+      required: [error, message]
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    TrustLevel:
+      type: string
+      enum: [T0, T1, T2, T3, T4]
+    AgentHealthState:
+      type: string
+      enum: [ready, busy, degraded, draining, unavailable]

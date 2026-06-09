@@ -4,5 +4,5 @@ export default defineConfig({
   site: "https://governancecommons.org",
   output: "static",
   srcDir: "./site/src",
-  publicDir: "./site/public",
+  publicDir: "./public",
 });

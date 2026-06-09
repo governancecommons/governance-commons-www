@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/compute-cost-model.schema.json",
+  "title": "Compute Cost Model",
+  "type": "object",
+  "required": ["currency", "unit", "skus", "default_sku", "cost_estimation"],
+  "additionalProperties": false,
+  "properties": {
+    "currency": { "type": "string" },
+    "unit": { "type": "string" },
+    "skus": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "sku_id",
+          "display_name",
+          "model_family",
+          "input_cost_per_million_tokens",
+          "output_cost_per_million_tokens",
+          "max_context_tokens"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "sku_id": { "type": "string" },
+          "display_name": { "type": "string" },
+          "provider": { "type": "string" },
+          "provider_sku_id": { "type": "string" },
+          "deployment_type": {
+            "type": "string",
+            "enum": ["hosted", "enterprise", "custom", "self-hosted"]
+          },
+          "model_family": { "type": "string" },
+          "input_cost_per_million_tokens": { "type": "number", "minimum": 0 },
+          "output_cost_per_million_tokens": { "type": "number", "minimum": 0 },
+          "cache_write_cost_per_million_tokens": { "type": "number", "minimum": 0 },
+          "cache_read_cost_per_million_tokens": { "type": "number", "minimum": 0 },
+          "max_context_tokens": { "type": "integer", "minimum": 1 },
+          "typical_latency_ms": { "type": "integer", "minimum": 0 },
+          "throughput_class": {
+            "type": "string",
+            "enum": ["high", "medium", "low"]
+          },
+          "capability_classes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["C1", "C2", "C3", "C4"]
+            }
+          },
+          "benchmark_profile": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "quality_score": { "type": "number", "minimum": 0, "maximum": 1 },
+              "reasoning_score": { "type": "number", "minimum": 0, "maximum": 1 },
+              "code_generation_score": { "type": "number", "minimum": 0, "maximum": 1 },
+              "tool_use_score": { "type": "number", "minimum": 0, "maximum": 1 },
+              "benchmark_suite": { "type": "string" },
+              "measured_at": { "type": "string", "format": "date-time" }
+            }
+          },
+          "enterprise_agreement": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "agreement_id": { "type": "string" },
+              "pricing_tier": { "type": "string" },
+              "dedicated_capacity": { "type": "boolean" },
+              "monthly_commit_usd": { "type": "number", "minimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "default_sku": { "type": "string" },
+    "provider_catalog": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["provider", "display_name"],
+        "additionalProperties": false,
+        "properties": {
+          "provider": { "type": "string" },
+          "display_name": { "type": "string" },
+          "supported_deployment_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["hosted", "enterprise", "custom", "self-hosted"]
+            }
+          },
+          "pricing_source": {
+            "type": "string",
+            "enum": ["static", "provider-api", "enterprise-contract", "manual"]
+          }
+        }
+      }
+    },
+    "cost_estimation": {
+      "type": "object",
+      "required": ["method"],
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": ["token-weighted", "flat-per-call", "percentile-sampled"]
+        },
+        "overhead_multiplier": { "type": "number", "minimum": 1 }
+      }
+    },
+    "dynamic_selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "cost_signal_source": {
+          "type": "string",
+          "enum": ["static", "provider-api", "telemetry", "enterprise-contract"]
+        },
+        "selection_policy": {
+          "type": "string",
+          "enum": ["lowest-cost", "best-quality-within-budget", "lowest-latency", "balanced"]
+        },
+        "refresh_interval_seconds": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

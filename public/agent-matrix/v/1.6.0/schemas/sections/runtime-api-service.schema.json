@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/runtime-api-service.schema.json",
+  "title": "Runtime API Service",
+  "description": "Runtime service API, SDK binding contract, deployment surface, and compatibility policy.",
+  "type": "object",
+  "required": ["service", "api", "sdk_bindings", "deployment"],
+  "additionalProperties": false,
+  "properties": {
+    "service": {
+      "type": "object",
+      "required": ["name", "version", "base_path"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "base_path": { "type": "string" },
+        "auth": { "type": "string" }
+      }
+    },
+    "api": {
+      "type": "object",
+      "required": ["style", "endpoints"],
+      "additionalProperties": false,
+      "properties": {
+        "style": {
+          "type": "string",
+          "enum": ["rest", "graphql", "grpc"]
+        },
+        "openapi_ref": { "type": "string" },
+        "endpoints": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["method", "path", "purpose"],
+            "additionalProperties": false,
+            "properties": {
+              "method": { "type": "string" },
+              "path": { "type": "string" },
+              "purpose": { "type": "string" },
+              "requires_auth": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "sdk_bindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["language", "package_name", "minimum_version"],
+        "additionalProperties": false,
+        "properties": {
+          "language": {
+            "type": "string",
+            "enum": ["python", "typescript", "go", "java", "rust"]
+          },
+          "package_name": { "type": "string" },
+          "minimum_version": { "type": "string" },
+          "interface_contract": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "deployment": {
+      "type": "object",
+      "required": ["container_image", "health_endpoint", "config_mount_path"],
+      "additionalProperties": false,
+      "properties": {
+        "container_image": { "type": "string" },
+        "health_endpoint": { "type": "string" },
+        "config_mount_path": { "type": "string" },
+        "hot_reload_supported": { "type": "boolean" }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "min_matrix_version": { "type": "string" },
+        "max_matrix_version": { "type": "string" },
+        "compatibility_mode": {
+          "type": "string",
+          "enum": ["strict", "standard", "lenient"]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/state-model.schema.json",
+  "title": "Agent State Model",
+  "description": "Finite-state machine definition for agent task lifecycle.",
+  "type": "object",
+  "required": ["model_type", "states", "transitions", "checkpoint_policy"],
+  "additionalProperties": false,
+  "properties": {
+    "model_type": {
+      "type": "string",
+      "enum": ["finite-state-machine"]
+    },
+    "states": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "description", "terminal"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]*$"
+          },
+          "description": { "type": "string" },
+          "terminal": { "type": "boolean" }
+        }
+      }
+    },
+    "transitions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "trigger"],
+        "additionalProperties": false,
+        "properties": {
+          "from": {
+            "oneOf": [
+              { "type": "string" },
+              {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            ]
+          },
+          "to": { "type": "string" },
+          "trigger": { "type": "string" }
+        }
+      }
+    },
+    "checkpoint_policy": {
+      "type": "object",
+      "required": ["checkpoint_on_states", "checkpoint_interval_seconds", "checkpoint_storage"],
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint_on_states": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "checkpoint_interval_seconds": { "type": "integer", "minimum": 1 },
+        "checkpoint_storage": { "type": "string" },
+        "checkpoint_schema": {
+          "type": "object",
+          "required": ["required_fields", "content_blocks", "integrity"],
+          "additionalProperties": false,
+          "properties": {
+            "required_fields": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string" }
+            },
+            "content_blocks": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["name", "description", "required"],
+                "additionalProperties": false,
+                "properties": {
+                  "name": { "type": "string" },
+                  "description": { "type": "string" },
+                  "required": { "type": "boolean" },
+                  "max_bytes": { "type": "integer", "minimum": 1 }
+                }
+              }
+            },
+            "integrity": {
+              "type": "object",
+              "required": ["hash_algorithm", "include_previous_checkpoint_hash"],
+              "additionalProperties": false,
+              "properties": {
+                "hash_algorithm": { "type": "string" },
+                "include_previous_checkpoint_hash": { "type": "boolean" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

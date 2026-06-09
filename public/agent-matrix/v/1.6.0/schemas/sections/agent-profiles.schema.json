@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/agent-profiles.schema.json",
+  "title": "Agent Profile",
+  "description": "A single agent archetype entry in the agent_profiles array.",
+  "type": "object",
+  "required": [
+    "id",
+    "agent_class",
+    "display_name",
+    "role",
+    "capability_class",
+    "trust_level",
+    "max_concurrent_tasks",
+    "stateful",
+    "human_in_the_loop_required"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "description": "Unique kebab-case identifier. Aligned with agent-dossier agent_id pattern."
+    },
+    "agent_class": {
+      "type": "string",
+      "enum": [
+        "authoring",
+        "planning",
+        "implementation",
+        "review",
+        "testing",
+        "orchestration",
+        "research",
+        "operations",
+        "compliance"
+      ],
+      "description": "Agent class enum aligned with agent-dossier identity_block agent_class."
+    },
+    "display_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "role": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Human-readable description of the agent's role."
+    },
+    "capability_class": {
+      "type": "string",
+      "enum": ["C1", "C2", "C3", "C4"],
+      "description": "Highest capability class the agent may access by default."
+    },
+    "trust_level": {
+      "type": "string",
+      "enum": ["T0", "T1", "T2", "T3", "T4"]
+    },
+    "max_concurrent_tasks": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1024
+    },
+    "stateful": {
+      "type": "boolean",
+      "description": "Whether the agent maintains state across turns."
+    },
+    "human_in_the_loop_required": {
+      "type": "boolean"
+    },
+    "description": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,366 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/ons/v/1.2.0/schemas/ons.schema.json",
+  "title": "Ontic Namespace Structure",
+  "description": "Root schema for the canonical ONS specification.",
+  "type": "object",
+  "required": [
+    "specification",
+    "normative_language",
+    "purpose",
+    "separator_grammar",
+    "casing_rules",
+    "governance_id_grammar",
+    "cluster_registration_protocol",
+    "namespace_domains",
+    "collision_rules",
+    "ontic_identity",
+    "rule_catalog",
+    "conformance_profiles",
+    "extension_rules"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "specification": {
+      "type": "object",
+      "required": [
+        "name",
+        "short_name",
+        "version",
+        "schema_version",
+        "status",
+        "canonical_file",
+        "schema",
+        "license",
+        "created_at",
+        "updated_at",
+        "description",
+        "compatibility"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "short_name": { "const": "ONS" },
+        "version": { "$ref": "#/$defs/semver" },
+        "schema_version": { "$ref": "#/$defs/semver" },
+        "status": { "enum": ["draft", "stable", "deprecated"] },
+        "canonical_file": { "type": "string" },
+        "schema": { "type": "string" },
+        "license": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" },
+        "description": { "type": "string" },
+        "compatibility": {
+          "type": "object",
+          "required": [
+            "versioning",
+            "backward_compatibility_required",
+            "breaking_change_requires_major_version"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "versioning": { "const": "semver" },
+            "backward_compatibility_required": { "type": "boolean" },
+            "breaking_change_requires_major_version": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "normative_language": {
+      "type": "object",
+      "required": ["reference", "declaration"],
+      "additionalProperties": true,
+      "properties": {
+        "reference": { "type": "string" },
+        "declaration": { "type": "string" },
+        "application": { "type": "string" }
+      }
+    },
+    "purpose": {
+      "type": "object",
+      "required": ["one_liner", "is", "is_not"],
+      "additionalProperties": false,
+      "properties": {
+        "one_liner": { "type": "string" },
+        "is": { "$ref": "#/$defs/string_list" },
+        "is_not": { "$ref": "#/$defs/string_list" }
+      }
+    },
+    "separator_grammar": {
+      "type": "object",
+      "required": ["invariant", "separators"],
+      "additionalProperties": false,
+      "properties": {
+        "invariant": { "type": "string" },
+        "separators": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "object",
+            "required": [
+              "token",
+              "name",
+              "semantic",
+              "meaning",
+              "canonical_uses",
+              "examples"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "token": { "enum": [".", "-", "_", ":"] },
+              "name": { "enum": ["dot", "hyphen", "underscore", "colon"] },
+              "semantic": {
+                "enum": ["hierarchy", "compound", "lexical_binding", "qualification"]
+              },
+              "meaning": { "type": "string" },
+              "canonical_uses": { "$ref": "#/$defs/string_list" },
+              "examples": { "$ref": "#/$defs/string_list" }
+            }
+          }
+        }
+      }
+    },
+    "casing_rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["domain", "rule", "pattern", "examples"],
+        "additionalProperties": false,
+        "properties": {
+          "domain": { "$ref": "#/$defs/id" },
+          "rule": { "type": "string" },
+          "pattern": { "type": "string" },
+          "examples": {
+            "type": "object",
+            "required": ["valid", "invalid"],
+            "additionalProperties": false,
+            "properties": {
+              "valid": { "$ref": "#/$defs/string_list" },
+              "invalid": { "$ref": "#/$defs/string_list" }
+            }
+          }
+        }
+      }
+    },
+    "governance_id_grammar": {
+      "type": "object",
+      "required": ["format", "cluster", "sequence", "rules"],
+      "additionalProperties": false,
+      "properties": {
+        "format": { "const": "CLUSTER.SEQ" },
+        "cluster": { "$ref": "#/$defs/pattern_descriptor" },
+        "sequence": {
+          "allOf": [{ "$ref": "#/$defs/pattern_descriptor" }],
+          "properties": {
+            "founding_sequence": { "type": "string", "pattern": "^[0-9]{2}$" }
+          }
+        },
+        "rules": { "$ref": "#/$defs/string_list" }
+      }
+    },
+    "cluster_registration_protocol": {
+      "type": "object",
+      "required": [
+        "definition",
+        "registry_scope",
+        "registry_file",
+        "required_fields",
+        "statuses",
+        "rules"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "definition": { "type": "string" },
+        "registry_scope": { "type": "string" },
+        "registry_file": { "type": "string", "minLength": 1 },
+        "required_fields": { "$ref": "#/$defs/string_list" },
+        "statuses": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "enum": ["proposed", "active", "deprecated", "retired"] },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "rules": { "$ref": "#/$defs/string_list" }
+      }
+    },
+    "namespace_domains": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "description",
+          "naming_contract",
+          "separator_semantics",
+          "registry_required",
+          "default_registry",
+          "collision_scope"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "description": { "type": "string" },
+          "naming_contract": { "type": "string" },
+          "separator_semantics": {
+            "type": "object",
+            "additionalProperties": {
+              "enum": ["hierarchy", "compound", "lexical_binding", "qualification"]
+            }
+          },
+          "registry_required": { "type": "boolean" },
+          "default_registry": { "type": "string" },
+          "collision_scope": { "type": "string" }
+        }
+      }
+    },
+    "collision_rules": {
+      "type": "object",
+      "required": ["definition", "prevention", "resolution"],
+      "additionalProperties": false,
+      "properties": {
+        "definition": { "type": "string" },
+        "prevention": { "$ref": "#/$defs/string_list" },
+        "resolution": { "$ref": "#/$defs/string_list" }
+      }
+    },
+    "ontic_identity": {
+      "type": "object",
+      "required": ["canonical_when", "non_canonical_when"],
+      "additionalProperties": false,
+      "properties": {
+        "canonical_when": { "$ref": "#/$defs/string_list" },
+        "non_canonical_when": { "$ref": "#/$defs/string_list" }
+      }
+    },
+    "rule_catalog": {
+      "type": "object",
+      "required": ["rule_id_format", "separator_semantic", "modes", "rules", "reserved_rules"],
+      "additionalProperties": false,
+      "properties": {
+        "rule_id_format": { "type": "string" },
+        "separator_semantic": { "type": "string" },
+        "modes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "enum": ["FAST", "STANDARD", "STRICT"] },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/rule" }
+        },
+        "reserved_rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "description", "mode"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "$ref": "#/$defs/rule_id" },
+              "description": { "type": "string" },
+              "mode": { "enum": ["FAST", "STANDARD", "STRICT"] }
+            }
+          }
+        }
+      }
+    },
+    "conformance_profiles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "description",
+          "product_root",
+          "governance_record_name",
+          "governance_directory",
+          "token_prefix",
+          "cluster_registry",
+          "token_registry",
+          "implementation_reference",
+          "namespace_roots",
+          "source_passes"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "status": { "enum": ["reference", "example", "experimental"] },
+          "description": { "type": "string" },
+          "ons_version": { "$ref": "#/$defs/semver" },
+          "compatibility_mode": { "enum": ["strict", "standard", "advisory"] },
+          "product_root": { "$ref": "#/$defs/id" },
+          "governance_record_name": { "type": "string" },
+          "governance_directory": { "$ref": "#/$defs/id" },
+          "token_prefix": { "type": "string", "pattern": "^--[a-z][a-z0-9-]*$" },
+          "cluster_registry": { "type": "string" },
+          "token_registry": { "type": "string" },
+          "implementation_reference": { "type": "string" },
+          "namespace_roots": { "$ref": "#/$defs/string_list" },
+          "source_passes": { "$ref": "#/$defs/string_list" }
+        }
+      }
+    },
+    "extension_rules": { "$ref": "#/$defs/string_list" }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(?:-[a-z0-9_]+)*$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "string_list": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "pattern_descriptor": {
+      "type": "object",
+      "required": ["description", "pattern"],
+      "additionalProperties": true,
+      "properties": {
+        "description": { "type": "string" },
+        "pattern": { "type": "string" },
+        "min_length": { "type": "integer", "minimum": 0 },
+        "max_length": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "rule_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$"
+    },
+    "rule": {
+      "type": "object",
+      "required": ["id", "description", "severity", "mode"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/rule_id" },
+        "description": { "type": "string" },
+        "severity": { "enum": ["ERROR", "WARN", "INFO"] },
+        "mode": { "enum": ["FAST", "STANDARD", "STRICT"] },
+        "deprecated_since": { "$ref": "#/$defs/semver" }
+      }
+    }
+  }
+}

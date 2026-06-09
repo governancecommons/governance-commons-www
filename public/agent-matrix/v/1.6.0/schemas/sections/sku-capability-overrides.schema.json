@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/sku-capability-overrides.schema.json",
+  "title": "SKU Capability Override",
+  "type": "object",
+  "required": ["sku_id", "disabled_capabilities"],
+  "additionalProperties": false,
+  "properties": {
+    "sku_id": { "type": "string" },
+    "disabled_capabilities": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "max_output_tokens": { "type": "integer", "minimum": 1 },
+    "max_tool_calls_per_turn": { "type": "integer", "minimum": 0 },
+    "notes": { "type": "string" }
+  }
+}

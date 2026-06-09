@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/agent-limitations.schema.json",
+  "title": "Agent Limitations Entry",
+  "type": "object",
+  "required": ["agent_profile", "limitations"],
+  "additionalProperties": false,
+  "properties": {
+    "agent_profile": { "type": "string" },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "description", "enforcement"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^lim-[a-z][a-z0-9-]*$"
+          },
+          "description": { "type": "string" },
+          "enforcement": {
+            "type": "string",
+            "enum": ["hard", "soft"]
+          }
+        }
+      }
+    }
+  }
+}

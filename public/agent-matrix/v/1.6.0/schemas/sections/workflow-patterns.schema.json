@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.6.0/schemas/sections/workflow-patterns.schema.json",
+  "title": "Named Workflow Pattern Library",
+  "description": "Canonical named, versioned workflow profiles for reusable multi-agent coordination patterns.",
+  "type": "object",
+  "required": ["library_version", "default_pattern", "patterns"],
+  "additionalProperties": false,
+  "properties": {
+    "library_version": {
+      "$ref": "#/$defs/semver"
+    },
+    "default_pattern": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*\\.v[0-9]+$"
+    },
+    "patterns": {
+      "type": "array",
+      "minItems": 4,
+      "items": { "$ref": "#/$defs/workflow_pattern" }
+    }
+  },
+  "$defs": {
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "workflow_pattern": {
+      "type": "object",
+      "required": [
+        "name",
+        "version",
+        "profile_id",
+        "coordination_model",
+        "required_roles",
+        "handoff_policy",
+        "failure_policy",
+        "audit_events",
+        "description"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "enum": [
+            "fan-out",
+            "pipeline",
+            "saga",
+            "critic-loop",
+            "map-reduce",
+            "approval-gate",
+            "handoff-chain"
+          ]
+        },
+        "version": { "$ref": "#/$defs/semver" },
+        "profile_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*\\.v[0-9]+$"
+        },
+        "coordination_model": { "type": "string", "minLength": 1 },
+        "required_roles": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "handoff_policy": { "type": "string", "minLength": 1 },
+        "failure_policy": { "type": "string", "minLength": 1 },
+        "audit_events": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string",
+            "enum": [
+              "handshake",
+              "task_acceptance",
+              "action",
+              "decision",
+              "tool_call",
+              "verification",
+              "handoff",
+              "escalation",
+              "failure",
+              "completion"
+            ]
+          }
+        },
+        "description": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

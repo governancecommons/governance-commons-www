@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/prompt-context-governance.schema.json",
+  "title": "Prompt and Context Governance",
+  "description": "Controls prompt artifacts, context envelopes, injection defense, RAG integration, and prompt caching.",
+  "type": "object",
+  "required": ["prompt_artifacts", "context_schema", "injection_defense", "caching_policy"],
+  "additionalProperties": false,
+  "properties": {
+    "prompt_artifacts": {
+      "type": "object",
+      "required": ["versioning", "required_metadata"],
+      "additionalProperties": false,
+      "properties": {
+        "versioning": {
+          "type": "string",
+          "enum": ["semantic-version", "content-hash", "git-ref"]
+        },
+        "required_metadata": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "approval_required_for": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "context_schema": {
+      "type": "object",
+      "required": ["envelope_name", "required_fields", "sensitivity_labels"],
+      "additionalProperties": false,
+      "properties": {
+        "envelope_name": { "type": "string" },
+        "required_fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "sensitivity_labels": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "max_context_bytes": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "injection_defense": {
+      "type": "object",
+      "required": ["boundary_markers_required", "untrusted_input_policy", "tool_output_policy"],
+      "additionalProperties": false,
+      "properties": {
+        "boundary_markers_required": { "type": "boolean" },
+        "untrusted_input_policy": { "type": "string" },
+        "tool_output_policy": { "type": "string" },
+        "blocked_patterns": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "rag_interface": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "retrieval_context_field": { "type": "string" },
+        "citation_required": { "type": "boolean" },
+        "max_retrieved_documents": { "type": "integer", "minimum": 0 },
+        "allowed_sources": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "caching_policy": {
+      "type": "object",
+      "required": ["allowed", "prohibited_context_tags", "cache_key_fields"],
+      "additionalProperties": false,
+      "properties": {
+        "allowed": { "type": "boolean" },
+        "prohibited_context_tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "cache_key_fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "max_ttl_seconds": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

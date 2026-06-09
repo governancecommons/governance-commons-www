@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/safety-constraints.schema.json",
+  "title": "Agent Safety Constraints",
+  "type": "object",
+  "required": ["enforcement_agent", "enforcement_mode", "constraints"],
+  "additionalProperties": false,
+  "properties": {
+    "enforcement_agent": { "type": "string" },
+    "enforcement_mode": {
+      "type": "string",
+      "enum": ["pre-execution", "post-execution", "both"]
+    },
+    "constraints": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "enforcement",
+          "applies_to",
+          "violation_action"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^sc-[0-9]{3,}$"
+          },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "enforcement": {
+            "type": "string",
+            "enum": ["hard", "soft"]
+          },
+          "applies_to": {
+            "oneOf": [
+              { "type": "string", "enum": ["all"] },
+              {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            ]
+          },
+          "violation_action": { "type": "string" },
+          "irreversible_action_classes": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

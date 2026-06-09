@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/identity-lifecycle.schema.json",
+  "title": "Identity Lifecycle",
+  "description": "Agent identity, authentication, key issuance, rotation, revocation, signing, and federation policy.",
+  "type": "object",
+  "required": ["identity_provider", "agent_identity", "credential_lifecycle", "message_signing"],
+  "additionalProperties": false,
+  "properties": {
+    "identity_provider": {
+      "type": "object",
+      "required": ["issuer", "protocol", "jwks_uri"],
+      "additionalProperties": false,
+      "properties": {
+        "issuer": { "type": "string" },
+        "protocol": {
+          "type": "string",
+          "enum": ["oidc", "jwt", "mtls", "spiffe"]
+        },
+        "jwks_uri": { "type": "string" },
+        "token_audience": { "type": "string" }
+      }
+    },
+    "agent_identity": {
+      "type": "object",
+      "required": ["subject_template", "required_claims", "attestation_required"],
+      "additionalProperties": false,
+      "properties": {
+        "subject_template": { "type": "string" },
+        "required_claims": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "attestation_required": { "type": "boolean" },
+        "attestation_methods": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["signed-agent-card", "workload-attestation", "mcp-server-attestation", "operator-approval"]
+          }
+        }
+      }
+    },
+    "credential_lifecycle": {
+      "type": "object",
+      "required": ["issuance", "rotation", "revocation"],
+      "additionalProperties": false,
+      "properties": {
+        "issuance": {
+          "type": "object",
+          "required": ["approval_required", "max_ttl_seconds"],
+          "additionalProperties": false,
+          "properties": {
+            "approval_required": { "type": "boolean" },
+            "max_ttl_seconds": { "type": "integer", "minimum": 60 }
+          }
+        },
+        "rotation": {
+          "type": "object",
+          "required": ["rotate_before_expiry_seconds", "overlap_seconds"],
+          "additionalProperties": false,
+          "properties": {
+            "rotate_before_expiry_seconds": { "type": "integer", "minimum": 0 },
+            "overlap_seconds": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "revocation": {
+          "type": "object",
+          "required": ["revocation_list_uri", "propagation_sla_seconds"],
+          "additionalProperties": false,
+          "properties": {
+            "revocation_list_uri": { "type": "string" },
+            "propagation_sla_seconds": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    },
+    "message_signing": {
+      "type": "object",
+      "required": ["required", "algorithms", "verification_failure_action"],
+      "additionalProperties": false,
+      "properties": {
+        "required": { "type": "boolean" },
+        "algorithms": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "key_lookup": { "type": "string" },
+        "verification_failure_action": { "type": "string" }
+      }
+    },
+    "federation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "trusted_issuers": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "cross_org_policy": { "type": "string" }
+      }
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/validation-requirements.schema.json",
+  "title": "Agent Validation Requirements",
+  "type": "object",
+  "required": ["admission_process", "re-validation_policy"],
+  "additionalProperties": false,
+  "properties": {
+    "admission_process": {
+      "type": "object",
+      "required": ["steps"],
+      "additionalProperties": false,
+      "properties": {
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "description", "required", "automated"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^val-[0-9]{2}$"
+              },
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "required": { "type": "boolean" },
+              "automated": { "type": "boolean" },
+              "min_pass_rate": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "applies_to_trust": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["T0", "T1", "T2", "T3", "T4"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "re-validation_policy": {
+      "type": "object",
+      "required": ["trigger_on"],
+      "additionalProperties": false,
+      "properties": {
+        "trigger_on": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "partial_revalidation_allowed": { "type": "boolean" }
+      }
+    }
+  }
+}

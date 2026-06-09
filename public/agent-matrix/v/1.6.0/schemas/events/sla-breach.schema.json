@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.5.0/schemas/events/sla-breach.schema.json",
+  "title": "SLA Breach Event Data",
+  "description": "CloudEvent data payload for org.governancecommons.agent-matrix.sla.breach.v1. Emitted when a service-level objective is breached during task execution.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["breach_id", "slo_id", "agent_id", "breached_at", "trace_id", "event_id", "breach_type", "observed_value", "threshold_value"],
+  "properties": {
+    "breach_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique identifier for this breach event instance."
+    },
+    "slo_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identifier of the SLO that was breached. References sla_qos.slo_profiles[].id."
+    },
+    "agent_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "breached_at": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "description": "RFC3339 UTC timestamp when the breach was detected."
+    },
+    "trace_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "breach_type": {
+      "type": "string",
+      "enum": ["latency", "availability", "success-rate", "throughput", "negotiation-timeout", "task-execution-timeout", "streaming-chunk-timeout"],
+      "description": "The dimension of the SLO that was breached."
+    },
+    "observed_value": {
+      "type": "number",
+      "description": "Measured value that triggered the breach. Units depend on breach_type (ms for latency, ratio for availability/success-rate, events/min for throughput)."
+    },
+    "threshold_value": {
+      "type": "number",
+      "description": "SLO threshold value that was exceeded. Same units as observed_value."
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^task:[a-z][a-z0-9-]*:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "slo_profile": {
+      "type": "string",
+      "description": "SLO profile ID from sla_qos.slo_profiles that owns the breached objective."
+    },
+    "error_budget_remaining": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Fraction of the error budget remaining after this breach. 0 means budget exhausted."
+    },
+    "action_triggered": {
+      "type": "string",
+      "description": "Automated action taken in response to the breach (e.g., escalate, throttle, alert)."
+    }
+  }
+}

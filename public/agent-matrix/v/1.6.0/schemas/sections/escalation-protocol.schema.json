@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/escalation-protocol.schema.json",
+  "title": "Agent Escalation Protocol",
+  "description": "4-level escalation model aligned with agent-dossier escalation_protocol.",
+  "type": "object",
+  "required": ["default_level", "levels"],
+  "additionalProperties": false,
+  "properties": {
+    "default_level": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3
+    },
+    "levels": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["level", "name", "description", "triggers", "actions"],
+        "additionalProperties": false,
+        "properties": {
+          "level": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3
+          },
+          "name": {
+            "type": "string",
+            "enum": [
+              "self_recovery",
+              "peer_handoff",
+              "operator_clarification",
+              "compliance_stop"
+            ]
+          },
+          "description": { "type": "string" },
+          "triggers": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" }
+          },
+          "actions": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" }
+          },
+          "requires": { "type": "string" },
+          "escalate_after_failures": { "type": "integer", "minimum": 1 },
+          "escalate_to": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3,
+            "description": "Level to escalate to after escalate_after_failures is exhausted. Required on levels 0–2 to make the escalation path explicit and validator-enforceable."
+          },
+          "escalate_on_sla_breach": {
+            "type": "boolean",
+            "description": "If true, breach of sla_response_hours triggers escalation to escalate_to level without waiting for additional failures."
+          },
+          "sla_response_hours": { "type": "integer", "minimum": 1 },
+          "auto_resume": { "type": "boolean" }
+        }
+      }
+    },
+    "escalation_event_type": {
+      "type": "string",
+      "const": "escalation",
+      "description": "Telemetry event_type emitted for all escalation events. Aligned with agent-dossier telemetry_trace_schema."
+    }
+  }
+}

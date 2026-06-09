@@ -1,0 +1,253 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.5.0/schemas/sections/a2a-binding.schema.json",
+  "title": "A2A Binding",
+  "description": "Agent-to-Agent protocol binding. Full 5/5 depth covering task payload, capability negotiation, peer trust anchor, resource URI scheme, error/retry semantics, and SLA timeout enforcement.",
+  "type": "object",
+  "required": ["protocol_version", "enabled", "agent_card", "discovery", "task_exchange", "security", "task_payload", "capability_negotiation", "peer_trust_anchor", "resource_uri_scheme", "error_retry_semantics", "sla_timeout_enforcement"],
+  "additionalProperties": false,
+  "properties": {
+    "protocol_version": { "type": "string" },
+    "enabled": { "type": "boolean" },
+    "specification_reference": { "type": "string" },
+    "agent_card": {
+      "type": "object",
+      "required": ["published", "required_fields", "capability_mapping"],
+      "additionalProperties": false,
+      "properties": {
+        "published": { "type": "boolean" },
+        "endpoint": { "type": "string" },
+        "required_fields": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "capability_mapping": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["matrix_capability", "a2a_skill"],
+            "additionalProperties": false,
+            "properties": {
+              "matrix_capability": { "type": "string" },
+              "a2a_skill": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "discovery": {
+      "type": "object",
+      "required": ["methods", "verification_required"],
+      "additionalProperties": false,
+      "properties": {
+        "methods": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "enum": ["well-known-agent-card", "registry", "direct-url"] }
+        },
+        "verification_required": { "type": "boolean" },
+        "cache_ttl_seconds": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "task_exchange": {
+      "type": "object",
+      "required": ["supported_interaction_modes", "handoff_mapping", "status_mapping"],
+      "additionalProperties": false,
+      "properties": {
+        "supported_interaction_modes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "enum": ["request-response", "streaming", "push-notification"] }
+        },
+        "handoff_mapping": { "type": "object", "additionalProperties": { "type": "string" } },
+        "status_mapping": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "security": {
+      "type": "object",
+      "required": ["identity_source", "auth_required", "min_trust_level"],
+      "additionalProperties": false,
+      "properties": {
+        "identity_source": { "type": "string" },
+        "auth_required": { "type": "boolean" },
+        "min_trust_level": { "type": "string", "enum": ["T0", "T1", "T2", "T3", "T4"] },
+        "signature_required": { "type": "boolean" }
+      }
+    },
+    "task_payload": {
+      "type": "object",
+      "required": ["required_fields", "optional_fields", "field_definitions", "rules"],
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "required_fields": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "optional_fields": { "type": "array", "items": { "type": "string" } },
+        "field_definitions": { "type": "object" },
+        "rules": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      }
+    },
+    "capability_negotiation": {
+      "type": "object",
+      "required": ["algorithm", "rules", "negotiation_timeout_ms"],
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "algorithm": {
+          "type": "object",
+          "required": ["name", "steps"],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string" },
+            "steps": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["step", "name", "description", "outcome"],
+                "additionalProperties": false,
+                "properties": {
+                  "step": { "type": "integer", "minimum": 1 },
+                  "name": { "type": "string" },
+                  "description": { "type": "string" },
+                  "outcome": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "rules": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "negotiation_timeout_ms": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "peer_trust_anchor": {
+      "type": "object",
+      "required": ["anchor_procedure", "trust_anchor_fields", "rules"],
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "anchor_procedure": {
+          "type": "object",
+          "required": ["steps"],
+          "additionalProperties": false,
+          "properties": {
+            "steps": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["step", "name", "description"],
+                "additionalProperties": false,
+                "properties": {
+                  "step": { "type": "integer", "minimum": 1 },
+                  "name": { "type": "string" },
+                  "description": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "trust_anchor_fields": { "type": "object" },
+        "rules": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      }
+    },
+    "resource_uri_scheme": {
+      "type": "object",
+      "required": ["schemes", "rules"],
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "schemes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["resource", "pattern", "example", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "resource": { "type": "string" },
+              "pattern": { "type": "string" },
+              "example": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "rules": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      }
+    },
+    "error_retry_semantics": {
+      "type": "object",
+      "required": ["error_classes", "retry_policy", "rules"],
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "error_classes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["class", "description", "codes"],
+            "additionalProperties": false,
+            "properties": {
+              "class": { "type": "string", "enum": ["terminal", "retryable", "negotiation-failure"] },
+              "description": { "type": "string" },
+              "codes": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["code", "description", "retry"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": { "type": "string" },
+                    "http_equivalent": { "type": "integer" },
+                    "description": { "type": "string" },
+                    "retry": { "oneOf": [{ "type": "boolean" }, { "type": "string" }] },
+                    "backoff": { "type": "string", "enum": ["none", "linear", "exponential"] },
+                    "respect_retry_after": { "type": "boolean" },
+                    "condition": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "retry_policy": {
+          "type": "object",
+          "required": ["max_attempts", "initial_backoff_ms", "backoff_multiplier", "max_backoff_ms"],
+          "additionalProperties": false,
+          "properties": {
+            "max_attempts": { "type": "integer", "minimum": 1 },
+            "initial_backoff_ms": { "type": "integer", "minimum": 1 },
+            "backoff_multiplier": { "type": "number", "minimum": 1 },
+            "max_backoff_ms": { "type": "integer", "minimum": 1 },
+            "jitter": { "type": "boolean" }
+          }
+        },
+        "rules": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      }
+    },
+    "sla_timeout_enforcement": {
+      "type": "object",
+      "required": ["timeouts", "sla_linkage", "enforcement_rules"],
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "timeouts": {
+          "type": "object",
+          "required": ["negotiation_timeout_ms", "task_accept_timeout_ms"],
+          "additionalProperties": false,
+          "properties": {
+            "negotiation_timeout_ms": { "type": "integer", "minimum": 1 },
+            "task_accept_timeout_ms": { "type": "integer", "minimum": 1 },
+            "task_execution_timeout_ms": {
+              "oneOf": [
+                { "type": "integer", "minimum": 1 },
+                { "type": "object" }
+              ]
+            },
+            "streaming_chunk_timeout_ms": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "sla_linkage": { "type": "object" },
+        "enforcement_rules": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      }
+    }
+  }
+}

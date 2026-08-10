@@ -1,0 +1,56 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Governance Commons | AI Agent Governance Standards",
+  description = "Interoperable, project-neutral standards for governed AI agent systems.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:image" content="https://governancecommons.org/assets/governance-hero.png" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%23124234%22/><text x=%225%22 y=%2222%22 fill=%22white%22 font-family=%22Arial%22 font-size=%2215%22 font-weight=%22700%22>GC</text></svg>" />
+  </head>
+  <body>
+    <header class="site-header" data-elevate>
+      <a class="brand" href="/" aria-label="Governance Commons home">
+        <span class="brand-mark" aria-hidden="true">GC</span>
+        <span>Governance Commons</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="/#standards">Standards</a>
+        <a href="/conformance">Conformance</a>
+        <a href="/#adopt">Adopt</a>
+      </nav>
+      <a class="header-action" href="https://github.com/governancecommons">GitHub</a>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <span>© {new Date().getFullYear()} Governance Commons</span>
+      <span>Portable standards for governed agent systems</span>
+    </footer>
+    <script>
+      const header = document.querySelector("[data-elevate]");
+      const updateHeader = () => header?.classList.toggle("is-elevated", window.scrollY > 8);
+      updateHeader();
+      window.addEventListener("scroll", updateHeader, { passive: true });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,33 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Conformance | Governance Commons" description="Governance Commons conformance profiles, validation expectations, and badge instructions.">
+  <section class="page-hero">
+    <div class="page-title"><p class="eyebrow">Conformance</p><h1>Make an honest, inspectable declaration.</h1><p class="lede">Choose the highest profile your implementation satisfies across each adopted standard. Governance Commons declarations are self-certified.</p></div>
+  </section>
+  <section class="section white">
+    <div class="section-inner">
+      <table class="profile-table">
+        <thead><tr><th>Profile</th><th>Requirement</th><th>Evidence</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Advisory</strong></td><td>Structure and naming follow the selected GC standard.</td><td>No validator run required.</td></tr>
+          <tr><td><strong>Standard</strong></td><td>The standard profile passes with zero failures.</td><td>Retain the conformance report.</td></tr>
+          <tr><td><strong>Strict</strong></td><td>The strict profile passes with zero failures.</td><td>Retain a signed compliance evidence bundle.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section class="section tint">
+    <div class="section-inner detail-grid">
+      <div>
+        <p class="eyebrow">Badge embedding</p><h2>Display the profile you validated.</h2>
+        <p>Replace the standard short name and profile with the values in your declaration.</p>
+        <code class="code-block">![gc-ons: standard](https://img.shields.io/badge/gc--ons-standard-green)</code>
+        <p style="margin-top:20px">Use blue for advisory, green for standard, and bright green for strict.</p>
+      </div>
+      <aside class="resource-panel"><p class="eyebrow">Declaration flow</p><ol class="number-list"><li>Run the relevant source validator.</li><li>Capture the conformance report.</li><li>Add the badge to your project.</li><li>Submit an adopter entry with evidence.</li></ol><a class="text-link" href="https://github.com/governancecommons/governance-commons/blob/main/ADOPTERS.md">View ADOPTERS.md →</a><a class="text-link" href="https://github.com/governancecommons/governance-commons/blob/main/docs/conformance/badge-criteria.md">Full badge criteria →</a></aside>
+    </div>
+  </section>
+  <section class="section white"><div class="section-inner notice"><strong>Certification boundary:</strong> conformance is currently self-declared. The maintainer reviews declarations for completeness, not independent re-validation.</div></section>
+</BaseLayout>

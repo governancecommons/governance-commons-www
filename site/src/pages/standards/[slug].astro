@@ -1,0 +1,39 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { standards, type Standard } from "../../data/standards";
+
+export function getStaticPaths() {
+  return standards.map((standard) => ({ params: { slug: standard.slug }, props: { standard } }));
+}
+
+interface Props { standard: Standard; }
+const { standard } = Astro.props;
+---
+
+<BaseLayout title={`${standard.name} | Governance Commons`} description={standard.scope}>
+  <section class="page-hero">
+    <div class="page-title">
+      <p class="eyebrow">Governance Commons standard</p>
+      <h1>{standard.name}</h1>
+      <p class="lede">{standard.summary}</p>
+      <div class="meta-row"><span>v{standard.version}</span><span>{standard.status}</span><span>{standard.license}</span></div>
+    </div>
+  </section>
+  <section class="section white">
+    <div class="section-inner detail-grid">
+      <div>
+        <section class="detail-block"><p class="eyebrow">Scope</p><h2>{standard.scope}</h2><ul class="check-list">{standard.capabilities.map((item) => <li>{item}</li>)}</ul></section>
+        <section class="detail-block"><p class="eyebrow">Adoption path</p><h2>Put the contract into use.</h2><ol class="number-list">{standard.adoption.map((item) => <li>{item}</li>)}</ol></section>
+        <section class="detail-block"><p class="eyebrow">Conformance</p><h2>Declare what you can prove.</h2><p>Governance Commons offers advisory, standard, and strict profiles. Select the highest profile your implementation satisfies, retain its validation evidence, and display the matching badge.</p><a class="text-link" href="/conformance">Read conformance and badge instructions →</a></section>
+      </div>
+      <aside class="resource-panel">
+        <p class="eyebrow">Resources</p>
+        <h3>Specification and validator</h3>
+        <a class="text-link" href={standard.repo}>Specification repository →</a>
+        <a class="text-link" href={standard.validator}>{standard.validatorLabel} →</a>
+        {standard.schema && <a class="text-link" href={standard.schema}>Versioned schema →</a>}
+        <small>Registry publication is pending for shared Governance Commons packages. Source validators remain available from their repositories.</small>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>

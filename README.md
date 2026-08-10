@@ -33,9 +33,11 @@ Astro writes the static site to `dist/`.
 
 ## Deployment
 
-- Code source: GitHub.
-- Build host: Netlify.
+- Code and build source: GitHub.
+- Host: GitHub Pages, deployed by `.github/workflows/deploy-pages.yml`.
 - Build command: `npm run build`.
-- Publish directory: `dist`.
-- DNS: Netlify DNS for `governancecommons.org`.
-- Registrar: Namecheap, with nameservers delegated to Netlify.
+- Publish artifact: `dist`.
+- Custom domain: `governancecommons.org`.
+
+The legacy `netlify.toml` is retained as a portable static-host configuration,
+but it is not the production deployment path.

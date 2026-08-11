@@ -4,3 +4,16 @@ dist/
 .netlify/
 npm-debug.log*
 remote/
+
+# Internal dev docs — this repo is public; DEV-DOCS live in the private
+# dev-docs repo instead (extracted by sync-dev-docs.ps1), never tracked here
+AGENTS.md
+CHATGPT.md
+CLAUDE.md
+DEV-PATH.md
+DEV-PLAN.md
+DEV-RELEASE.md
+DEV-TRACKS.md
+REVIEW-GRAMMAR.md
+MARKET.md
+DIST.md

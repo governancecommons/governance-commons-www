@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout>
+  <section class="section white">
+    <div class="section-heading">
+      <p class="eyebrow">GC v1.2.0</p>
+      <h1>Public Release &amp; OSS Baseline</h1>
+      <p>Governance Commons v1.2.0 defines the frozen open-source baseline for the first public release train.</p>
+    </div>
+
+    <div class="intro-grid">
+      <article class="surface">
+        <h2>Baseline freeze</h2>
+        <p>The PASS-5 Batch 2 OSS core is frozen at the v1.2.0 release boundary. New category-defining capabilities are not baseline requirements.</p>
+      </article>
+      <article class="surface">
+        <h2>What comes next</h2>
+        <p>PASS-6 profiles are optional extensions to the frozen baseline. They may add constitutional governance, federated trust, temporal authority, and related capabilities without changing the v1.2.0 core contract.</p>
+      </article>
+      <article class="surface">
+        <h2>Release boundary</h2>
+        <p>Each Governance Commons specification remains independently versioned. The release manifest records the pinned versions and compatibility boundary for the public train.</p>
+      </article>
+    </div>
+
+    <div class="surface" style="margin-top:30px">
+      <h2>Release posture</h2>
+      <ul>
+        <li>v1.2.0 is the public release-train label.</li>
+        <li>The OSS baseline remains intentionally stable after PASS-5 Batch 2.</li>
+        <li>Optional PASS-6 profiles do not become prerequisites for v1.2.0 adopters.</li>
+        <li>Governance claims remain scoped to documented alignment and conformance evidence; this page does not constitute certification.</li>
+      </ul>
+      <div class="actions" style="margin-top:24px">
+        <a class="button primary" href="/conformance">Conformance profiles</a>
+        <a class="button secondary" href="https://github.com/governancecommons/governance-commons/releases">GitHub releases</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

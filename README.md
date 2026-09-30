@@ -1,6 +1,6 @@
 # Governance Commons Website
 
-Astro site for [governancecommons.org](https://governancecommons.org), the umbrella home for Governance Commons standards and deployable adoption SKUs.
+Astro site for [governancecommons.org](https://governancecommons.org), the common-ground home for Governance Commons standards and a public map of related standards, protocols, research, and governance practices.
 
 ## Repository Structure
 

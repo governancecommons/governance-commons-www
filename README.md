@@ -34,6 +34,13 @@ npm run build
 
 Astro writes the static site to `dist/`.
 
+Verify that the Pages artifact contains the custom-domain marker and the five
+Agent Dossier schemas with matching canonical `$id` values:
+
+```sh
+npm run verify:publication
+```
+
 ## Deployment
 
 - Code and build source: GitHub.
@@ -41,6 +48,16 @@ Astro writes the static site to `dist/`.
 - Build command: `npm run build`.
 - Publish artifact: `dist`.
 - Custom domain: `governancecommons.org`.
+
+The deployment workflow verifies the artifact before upload. GitHub Pages must
+also have `governancecommons.org` configured as its custom domain, and public
+DNS must point only to the records required by GitHub Pages. The checked-in
+`public/CNAME` file is necessary but does not configure those external settings.
+
+As of 2026-10-07, the five schemas return `200` from the repository's default
+GitHub Pages address, while their canonical `governancecommons.org` URLs return
+`404`. RFC-0001 gate G-1 therefore remains open until the Pages custom-domain
+setting and DNS are corrected and the canonical URLs are verified publicly.
 
 The legacy `netlify.toml` is retained as a portable static-host configuration,
 but it is not the production deployment path.

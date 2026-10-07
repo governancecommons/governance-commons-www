@@ -2,18 +2,22 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="Conformance | Governance Commons" description="Governance Commons conformance profiles, validation expectations, and badge instructions.">
+<BaseLayout title="Validation & Declarations | Governance Commons" description="Version-scoped Governance Commons validation support, evidence expectations, and declaration boundaries.">
   <section class="page-hero">
-    <div class="page-title"><p class="eyebrow">Conformance</p><h1>Make an honest, inspectable declaration.</h1><p class="lede">Choose the highest profile your implementation satisfies across each adopted standard. Governance Commons declarations are self-certified.</p></div>
+    <div class="page-title"><p class="eyebrow">Validation &amp; declarations</p><h1>Say exactly what was checked.</h1><p class="lede">A Governance Commons claim names one specification, one version, one subject, one validation method, and the evidence retained. The umbrella itself is not an adoption or certification target.</p></div>
   </section>
   <section class="section white">
     <div class="section-inner">
+      <h2>Current automated support</h2>
       <table class="profile-table">
-        <thead><tr><th>Profile</th><th>Requirement</th><th>Evidence</th></tr></thead>
+        <thead><tr><th>Target</th><th>Published support</th><th>Public claim boundary</th></tr></thead>
         <tbody>
-          <tr><td><strong>Advisory</strong></td><td>Structure and naming follow the selected GC standard.</td><td>No validator run required.</td></tr>
-          <tr><td><strong>Standard</strong></td><td>The standard profile passes with zero failures.</td><td>Retain the conformance report.</td></tr>
-          <tr><td><strong>Strict</strong></td><td>The strict profile passes with zero failures.</td><td>Retain a signed compliance evidence bundle.</td></tr>
+          <tr><td><strong>Agent Dossier</strong></td><td>Python governance-commons 0.2.0: structural dossier validation</td><td>Name the supported dossier version and retain the ConformanceReport.</td></tr>
+          <tr><td><strong>ONS</strong></td><td>Python 0.2.0 and npm 0.1.1 expose ONS validation, but current toolkit rules identify ONS v1.4.0 while the latest ONS repo release is v1.3.0.</td><td>Do not treat the toolkit/release mismatch as proof of ONS v1.3.0 conformance.</td></tr>
+          <tr><td><strong>Agent Matrix</strong></td><td>Repository source validator and tests; no shared published gc-validate target.</td><td>Label evidence manual or provisional and record the exact commit used.</td></tr>
+          <tr><td><strong>APO</strong></td><td>Runtime tests and local validation commands.</td><td>APO is a reference-runtime candidate, not a specification or conformance target.</td></tr>
+          <tr><td><strong>ATP</strong></td><td>Pre-release schema and conformance tests.</td><td>No public badge or released conformance claim.</td></tr>
+          <tr><td><strong>Governance Record</strong></td><td>Python governance-commons 0.2.0.</td><td>Validation checks the record contract; it does not grant authority or certify the underlying action.</td></tr>
         </tbody>
       </table>
     </div>
@@ -21,13 +25,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   <section class="section tint">
     <div class="section-inner detail-grid">
       <div>
-        <p class="eyebrow">Badge embedding</p><h2>Display the profile you validated.</h2>
-        <p>Replace the standard short name and profile with the values in your declaration.</p>
-        <code class="code-block">![gc-ons: standard](https://img.shields.io/badge/gc--ons-standard-green)</code>
-        <p style="margin-top:20px">Use blue for advisory, green for standard, and bright green for strict.</p>
+        <p class="eyebrow">Evidence levels</p><h2>Automated, manual, and provisional are different claims.</h2>
+        <ul class="check-list">
+          <li><strong>Automated:</strong> a published validator explicitly supports the named target and version.</li>
+          <li><strong>Manual:</strong> documented checks were performed by an identified reviewer without a supported published validator.</li>
+          <li><strong>Provisional:</strong> useful implementation evidence exists, but version alignment, validator coverage, or release maturity remains unresolved.</li>
+        </ul>
       </div>
-      <aside class="resource-panel"><p class="eyebrow">Declaration flow</p><ol class="number-list"><li>Run the relevant source validator.</li><li>Capture the conformance report.</li><li>Add the badge to your project.</li><li>Submit an adopter entry with evidence.</li></ol><a class="text-link" href="https://github.com/governancecommons/governance-commons/blob/main/ADOPTERS.md">View ADOPTERS.md →</a><a class="text-link" href="https://github.com/governancecommons/governance-commons/blob/main/docs/conformance/badge-criteria.md">Full badge criteria →</a></aside>
+      <aside class="resource-panel"><p class="eyebrow">Declaration record</p><ol class="number-list"><li>Name the specification and exact version.</li><li>Identify the subject and validator or manual procedure.</li><li>Retain the ConformanceReport or manual evidence.</li><li>Record unsupported rules, skips, and uncertainty.</li><li>Submit an adopter entry only with those limits visible.</li></ol><a class="text-link" href="https://github.com/governancecommons/governance-commons/blob/main/ADOPTERS.md">View ADOPTERS.md →</a><a class="text-link" href="https://github.com/governancecommons/governance-commons/blob/main/docs/conformance/badge-criteria.md">Detailed criteria →</a></aside>
     </div>
   </section>
-  <section class="section white"><div class="section-inner notice"><strong>Certification boundary:</strong> conformance is currently self-declared. The maintainer reviews declarations for completeness, not independent re-validation.</div></section>
+  <section class="section white"><div class="section-inner notice"><strong>Certification boundary:</strong> Governance Commons does not operate a certification program. Maintainer review of a declaration is a completeness check, not independent re-validation or endorsement.</div></section>
 </BaseLayout>

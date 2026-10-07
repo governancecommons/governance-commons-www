@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { standards } from "../data/standards";
+import { components } from "../data/standards";
 ---
 
 <BaseLayout>
@@ -10,55 +10,73 @@ import { standards } from "../data/standards";
     <div class="hero-content">
       <p class="eyebrow">Governancecommons.org</p>
       <h1 id="hero-title">Governance Commons</h1>
-      <p class="hero-copy">A common-ground home for standards, protocols, research, and portable governance work for governed AI agent systems.</p>
+      <p class="hero-copy">A maintainer-led sociotechnical commons for inspectable governance of human–AI and multi-agent systems.</p>
       <div class="actions">
-        <a class="button primary" href="#standards">Explore standards</a>
-        <a class="button secondary" href="/conformance">Declare conformance</a>
+        <a class="button primary" href="#components">Explore components</a>
+        <a class="button secondary" href="#mission">Why governance needs a commons</a>
       </div>
     </div>
-    <aside class="hero-panel" aria-label="Governance Commons release summary">
-      <div><span class="metric">4</span><span class="metric-label">portable standards</span></div>
-      <div><span class="metric">v1.2.0</span><span class="metric-label">release train</span></div>
-      <div><span class="metric">3</span><span class="metric-label">conformance profiles</span></div>
+    <aside class="hero-panel" aria-label="Governance Commons public status">
+      <div><span class="metric">3</span><span class="metric-label">released specifications</span></div>
+      <div><span class="metric">v1.2.0</span><span class="metric-label">pinned baseline</span></div>
+      <div><span class="metric">No</span><span class="metric-label">certification authority</span></div>
     </aside>
   </section>
 
   <section class="section">
     <div class="section-heading">
-      <p class="eyebrow">Public release</p>
-      <h2>Governance Commons v1.2.0 establishes the frozen OSS baseline.</h2>
-      <p>PASS-5 closes the first public release boundary while preserving room for optional category-defining profiles in PASS-6.</p>
+      <p class="eyebrow">Current public state</p>
+      <h2>RFC-0001 is accepted; its new public boundary is not yet active.</h2>
+      <p>The accepted Public Boundary Model separates the umbrella, independently adoptable specifications, reference tooling, publication infrastructure, and maintainer workspace. Activation still depends on gates G-1 through G-5. GC v1.2.0 remains the current pinned release record while that transition is verified.</p>
     </div>
     <div class="actions" style="margin-top:24px">
-      <a class="button ink" href="/release">Read the release &amp; baseline notice</a>
+      <a class="button ink" href="/release">Read release and transition status</a>
+      <a class="button secondary" href="https://github.com/governancecommons/governance-commons/blob/main/rfcs/RFC-0001-public-boundary-model.md">Read RFC-0001</a>
     </div>
   </section>
 
-  <section class="section">
+  <section id="mission" class="section white">
     <div class="section-heading">
-      <p class="eyebrow">The commons</p>
-      <h2>Governance contracts that travel with the work.</h2>
+      <p class="eyebrow">The sociotechnical problem</p>
+      <h2>Capability is not the same as legitimate authority.</h2>
+      <p>Governed systems need more than schemas or agent routing. They need inspectable answers about identity, authority, delegation, human oversight, handoffs, provenance, evidence, accountability, institutions, trust, legitimacy, power, appeal, override, revocation, and human–agent coordination.</p>
     </div>
     <div class="intro-grid">
-      <article class="surface"><h3>Independently versioned</h3><p>Adopt one standard or the full stack. Every specification keeps its own schema, release cadence, examples, and compatibility contract.</p></article>
-      <article class="surface"><h3>Project-neutral</h3><p>Use portable contracts without importing project-specific business logic or committing to one orchestration runtime.</p></article>
-      <article class="surface"><h3>Evidence-oriented</h3><p>Make authority, routing, handoffs, validation, telemetry, and recovery visible enough to review after the work is done.</p></article>
+      <article class="surface"><h3>Authority before action</h3><p>Record who may act, under what scope, from which source of authority, and how that authority expires or is revoked.</p></article>
+      <article class="surface"><h3>Evidence after action</h3><p>Preserve validation, handoff, provenance, telemetry, and decision evidence without pretending that evidence itself grants authority.</p></article>
+      <article class="surface"><h3>Human recourse</h3><p>Keep approval, refusal, appeal, override, escalation, and accountability visible when work crosses human and institutional boundaries.</p></article>
     </div>
   </section>
 
-  <section id="standards" class="section white">
+  <section id="boundary" class="section">
     <div class="section-heading">
-      <p class="eyebrow">Standards</p>
-      <h2>The four layers of governed agent software.</h2>
+      <p class="eyebrow">Accepted boundary model</p>
+      <h2>Five public roles, not five equal standards.</h2>
+      <p>This is the transition authorized by RFC-0001. It becomes active doctrine only after all activation gates verify.</p>
     </div>
     <div class="standards-grid">
-      {standards.map((standard) => (
+      <article class="surface"><span class="step">01</span><h3>Public umbrella</h3><p>Mission, shared vocabulary, publication identity, and community-facing orientation. Citeable, not adoptable.</p></article>
+      <article class="surface"><span class="step">02</span><h3>Specifications</h3><p>Agent Dossier, Agent Matrix, and ONS are independently versioned adoption units.</p></article>
+      <article class="surface"><span class="step">03</span><h3>Reference tooling</h3><p>Validators, SDKs, CLIs, evidence utilities, and runtime candidates implement selected contracts.</p></article>
+      <article class="surface"><span class="step">04</span><h3>Publication infrastructure</h3><p>Websites and repositories publish source, releases, documentation, schemas, and status.</p></article>
+      <article class="surface"><span class="step">05</span><h3>Maintainer workspace</h3><p>Plans, release records, internal coordination, and construction history are not products.</p></article>
+    </div>
+  </section>
+
+  <section id="components" class="section white">
+    <div class="section-heading">
+      <p class="eyebrow">Public components</p>
+      <h2>Role, maturity, version, and baseline status stay visible.</h2>
+    </div>
+    <div class="standards-grid">
+      {components.map((component) => (
         <article class="surface standard-card">
-          <div class="standard-topline"><span>{standard.status}</span><span>v{standard.version}</span></div>
-          <h3>{standard.name}</h3>
-          <p>{standard.scope}</p>
-          <p class="standard-detail">{standard.summary}</p>
-          <div class="standard-footer"><code>{standard.shortName}</code><a class="text-link" href={`/standards/${standard.slug}`}>View standard →</a></div>
+          <div class="standard-topline"><span>{component.category}</span><span>{component.maturity}</span></div>
+          <h3>{component.name}</h3>
+          <p><strong>{component.role}</strong></p>
+          <p>{component.scope}</p>
+          <p class="standard-detail">v{component.version} · {component.baseline}</p>
+          <div class="standard-footer"><code>{component.shortName}</code><a class="text-link" href={`/standards/${component.slug}`}>View status →</a></div>
         </article>
       ))}
     </div>
@@ -67,18 +85,31 @@ import { standards } from "../data/standards";
   <section id="adopt" class="section tint">
     <div class="section-heading">
       <p class="eyebrow">Adopt</p>
-      <h2>Move from a specification to a verifiable declaration.</h2>
+      <h2>Make a narrow claim that another person can inspect.</h2>
     </div>
     <div class="adopt-grid">
-      <article class="surface"><span class="step">01</span><h3>Select</h3><p>Choose the standards and pinned versions your system actually implements.</p></article>
-      <article class="surface"><span class="step">02</span><h3>Validate</h3><p>Run the source validators and retain the report required by your profile.</p></article>
-      <article class="surface"><span class="step">03</span><h3>Declare</h3><p>Publish the matching badge and add your project to the adopter registry.</p></article>
+      <article class="surface"><span class="step">01</span><h3>Name</h3><p>Choose one released specification and pin the exact version you implement.</p></article>
+      <article class="surface"><span class="step">02</span><h3>Verify</h3><p>Use a published validator only where it supports that target. Otherwise document manual checks and label the result provisional.</p></article>
+      <article class="surface"><span class="step">03</span><h3>Preserve</h3><p>Retain the validator version, ConformanceReport or manual evidence, source provenance, and limits of the claim.</p></article>
     </div>
-    <div class="actions" style="justify-content:center; margin-top:30px"><a class="button ink" href="/conformance">Conformance profiles and badges</a></div>
+    <div class="actions" style="justify-content:center; margin-top:30px"><a class="button ink" href="/conformance">Validation and declaration guidance</a></div>
+  </section>
+
+  <section id="commons" class="section white">
+    <div class="section-heading">
+      <p class="eyebrow">Research, education, and community</p>
+      <h2>The public purpose is broader than the repositories.</h2>
+      <p>Today, GC publishes specifications, evidence contracts, reference tooling, an ecosystem map, and maintainer-led explanatory material. The goals below are directions for a commons—not claims that formal programs or neutral institutions already exist.</p>
+    </div>
+    <div class="intro-grid">
+      <article class="surface"><h3>Research</h3><p>Connect technical mechanisms to sociology, institutions, legitimacy, power, trust, accountability, and the real effects of delegated machine action.</p></article>
+      <article class="surface"><h3>Education</h3><p>Develop approachable examples, curricula, case studies, and critical vocabulary for builders, reviewers, organizations, and affected communities.</p></article>
+      <article class="surface"><h3>Community</h3><p>Invite critique, implementation experience, competing perspectives, and future shared stewardship without claiming neutrality or participation that does not yet exist.</p></article>
+    </div>
   </section>
 
   <section class="section contact-section">
-    <div class="contact-copy"><p class="eyebrow">Governance Commons</p><h2>Common ground for governed AI systems.</h2><p>Use GC standards where they fit, and use the ecosystem map to find, understand, compare, verify, and connect work maintained elsewhere.</p></div>
-    <div class="contact-actions"><a class="button primary" href="https://github.com/governancecommons">Browse repositories</a></div>
+    <div class="contact-copy"><p class="eyebrow">Authority boundary</p><h2>A commons, not a regulator or certifier.</h2><p>Governance Commons is not ISO, NIST, IEEE, AAIF, a regulator, or a certification authority. External organizations retain authority over their own work; GC must preserve their provenance and state relationships as alignment, mapping, implementation, or research—not endorsement.</p></div>
+    <div class="contact-actions"><a class="button primary" href="/ecosystem">Explore the ecosystem boundary</a></div>
   </section>
 </BaseLayout>

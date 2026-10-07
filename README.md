@@ -1,6 +1,6 @@
 # Governance Commons Website
 
-Astro site for [governancecommons.org](https://governancecommons.org), the common-ground home for Governance Commons standards and a public map of related standards, protocols, research, and governance practices.
+Astro site for [governancecommons.org](https://governancecommons.org), the public home of the maintainer-led Governance Commons sociotechnical governance project. The site distinguishes released specifications, emerging work, evidence contracts, reference tooling, publication infrastructure, and maintainer coordination while preserving external authority and provenance.
 
 ## Repository Structure
 
@@ -9,12 +9,15 @@ This repository separates website source code from published content:
 - `site/` — Astro website code licensed under MIT (`site/LICENSE`).
 - `content/` — governance content and schema assets licensed under CC BY 4.0 (`content/LICENSE`).
 
-## Standards Represented
+## Public Components Represented
 
-- Agent Dossier: per-agent identity, authority, handoff, telemetry, and audit contract.
-- Agent Matrix: multi-agent capability, routing, trust, safety, and coordination model.
-- Ontic Namespace Structure: naming grammar, namespace identity, collision rules, and validation rule IDs.
-- Project Orchestrator Agent: runtime execution contract for project-level orchestrators.
+- Released specifications: Agent Dossier, Agent Matrix, and Ontic Namespace Structure.
+- Reference-runtime candidate: Agent Project Orchestrator.
+- Emerging pre-release work: Agent Team Protocol.
+- Evidence contracts: Governance Record and ConformanceReport.
+- Reference tooling: GC Toolkit / Registry SDKs, validators, and CLIs.
+
+The accepted RFC-0001 boundary remains inactive until gates G-1 through G-5 verify. The site must not describe Governance Commons as a certification authority or imply authority from ISO, NIST, IEEE, AAIF, or other external organizations.
 
 ## Development
 

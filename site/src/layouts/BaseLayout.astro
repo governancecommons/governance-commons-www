@@ -7,8 +7,8 @@ interface Props {
 }
 
 const {
-  title = "Governance Commons | AI Agent Governance Standards",
-  description = "Interoperable, project-neutral standards for governed AI agent systems.",
+  title = "Governance Commons | Sociotechnical Governance for Human–AI Systems",
+  description = "A maintainer-led commons for specifications, evidence, tooling, research, education, and community work on governed human–AI and multi-agent systems.",
 } = Astro.props;
 ---
 
@@ -33,7 +33,8 @@ const {
         <span>Governance Commons</span>
       </a>
       <nav class="site-nav" aria-label="Primary navigation">
-        <a href="/#standards">Standards</a>
+        <a href="/#components">Components</a>
+        <a href="/#commons">Commons</a>
         <a href="/ecosystem">Ecosystem</a>
         <a href="/conformance">Conformance</a>
         <a href="/#adopt">Adopt</a>
@@ -45,7 +46,7 @@ const {
     </main>
     <footer class="site-footer">
       <span>© {new Date().getFullYear()} Governance Commons</span>
-      <span>Portable standards for governed agent systems</span>
+      <span>Specifications, evidence, tooling, and public learning for governed human–AI systems</span>
     </footer>
     <script>
       const header = document.querySelector("[data-elevate]");

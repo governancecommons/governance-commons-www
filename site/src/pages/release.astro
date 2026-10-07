@@ -2,40 +2,32 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<BaseLayout>
+<BaseLayout title="Release & Transition Status | Governance Commons" description="GC v1.2.0 pins and RFC-0001 public-boundary transition status.">
   <section class="section white">
     <div class="section-heading">
       <p class="eyebrow">GC v1.2.0</p>
-      <h1>Public Release &amp; OSS Baseline</h1>
-      <p>Governance Commons v1.2.0 defines the frozen open-source baseline for the first public release train.</p>
+      <h1>Release baseline and boundary transition</h1>
+      <p>GC v1.2.0 is the current umbrella pinning record. It does not turn the umbrella into a monolithic specification, and it does not activate the accepted RFC-0001 public boundary.</p>
     </div>
 
     <div class="intro-grid">
-      <article class="surface">
-        <h2>Baseline freeze</h2>
-        <p>The PASS-5 Batch 2 OSS core is frozen at the v1.2.0 release boundary. New category-defining capabilities are not baseline requirements.</p>
-      </article>
-      <article class="surface">
-        <h2>What comes next</h2>
-        <p>PASS-6 profiles are optional extensions to the frozen baseline. They may add constitutional governance, federated trust, temporal authority, and related capabilities without changing the v1.2.0 core contract.</p>
-      </article>
-      <article class="surface">
-        <h2>Release boundary</h2>
-        <p>Each Governance Commons specification remains independently versioned. The release manifest records the pinned versions and compatibility boundary for the public train.</p>
-      </article>
+      <article class="surface"><h2>Released specification pins</h2><p>Agent Dossier v1.1.0, Agent Matrix v1.4.0, and ONS v1.3.0 are the three released specification pins presented by the pending boundary model.</p></article>
+      <article class="surface"><h2>Historical runtime pin</h2><p>The v1.2.0 manifest also pins APO v1.1.0. RFC-0001 reclassifies APO as a reference-runtime candidate; the historical manifest is not rewritten as though that transition had already been active.</p></article>
+      <article class="surface"><h2>Outside the baseline</h2><p>Agent Team Protocol v0.1.0 is emerging pre-release work and is not included in GC v1.2.0.</p></article>
     </div>
 
     <div class="surface" style="margin-top:30px">
-      <h2>Release posture</h2>
+      <h2>RFC-0001 activation state</h2>
       <ul>
-        <li>v1.2.0 is the public release-train label.</li>
-        <li>The OSS baseline remains intentionally stable after PASS-5 Batch 2.</li>
-        <li>Optional PASS-6 profiles do not become prerequisites for v1.2.0 adopters.</li>
-        <li>Governance claims remain scoped to documented alignment and conformance evidence; this page does not constitute certification.</li>
+        <li><strong>Accepted:</strong> 2026-10-01. A-1 through A-5 implementation is authorized.</li>
+        <li><strong>Not active:</strong> activation still requires all G-1 through G-5 conditions to verify.</li>
+        <li><strong>Known open:</strong> canonical Agent Dossier schema URLs currently return 404; APO has not met A-1 provenance/drift requirements; Agent Matrix still references unreleased Agent Dossier v1.4.0 on current main.</li>
+        <li><strong>Publication:</strong> Python governance-commons 0.2.0 is published. npm 0.2.0 is not present in the registry; npm 0.1.1 remains latest even though the workflow now uses Trusted Publishing/OIDC.</li>
       </ul>
       <div class="actions" style="margin-top:24px">
-        <a class="button primary" href="/conformance">Conformance profiles</a>
-        <a class="button secondary" href="https://github.com/governancecommons/governance-commons/releases">GitHub releases</a>
+        <a class="button primary" href="/conformance">Validation support</a>
+        <a class="button secondary" href="https://github.com/governancecommons/governance-commons/blob/main/releases/gc-v1.2.0.yaml">Release manifest</a>
+        <a class="button secondary" href="https://github.com/governancecommons/governance-commons/blob/main/rfcs/RFC-0001-public-boundary-model.md">RFC-0001</a>
       </div>
     </div>
   </section>

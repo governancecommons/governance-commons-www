@@ -12,7 +12,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <table class="profile-table">
         <thead><tr><th>Target</th><th>Published support</th><th>Public claim boundary</th></tr></thead>
         <tbody>
-          <tr><td><strong>Agent Dossier</strong></td><td>Python governance-commons 0.2.0: structural dossier validation</td><td>Name the supported dossier version and retain the ConformanceReport.</td></tr>
+          <tr><td><strong>Agent Dossier</strong></td><td>Current Python source contains structural dossier validation, with candidate-wheel CI at commit <code>5987cd9</code>. Published Python 0.2.0 does not expose the Dossier target.</td><td>Until a newer Python package is published, use the exact source commit and label the evidence source-based rather than registry-installed.</td></tr>
           <tr><td><strong>ONS</strong></td><td>Python 0.2.0 and npm 0.1.1 expose ONS validation, but current toolkit rules identify ONS v1.4.0 while the latest ONS repo release is v1.3.0.</td><td>Do not treat the toolkit/release mismatch as proof of ONS v1.3.0 conformance.</td></tr>
           <tr><td><strong>Agent Matrix</strong></td><td>Repository source validator and tests; no shared published gc-validate target.</td><td>Label evidence manual or provisional and record the exact commit used.</td></tr>
           <tr><td><strong>APO</strong></td><td>Runtime tests and local validation commands.</td><td>APO is a reference-runtime candidate, not a specification or conformance target.</td></tr>

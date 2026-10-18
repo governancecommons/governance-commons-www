@@ -46,18 +46,15 @@ code {
 }
 .site-header.is-elevated { background: rgba(244, 246, 241, 0.99); box-shadow: 0 10px 30px rgba(17, 23, 19, 0.08); }
 .brand, .site-nav, .actions, .contact-actions { align-items: center; display: flex; }
-.brand { font-weight: 760; gap: 10px; }
+.brand { gap: 12px; }
 .brand-mark {
-  align-items: center;
-  background: var(--green);
-  border-radius: 6px;
-  color: var(--white);
-  display: inline-flex;
-  font-size: 0.78rem;
-  height: 34px;
-  justify-content: center;
-  width: 34px;
+  display: block;
+  flex: 0 0 auto;
+  height: 46px;
+  width: 46px;
 }
+.brand-name { font-size: 1rem; font-weight: 760; letter-spacing: -0.025em; line-height: 1.05; }
+.brand-name strong { color: var(--green); font-weight: 860; }
 .site-nav { color: #39413c; font-size: 0.94rem; gap: 22px; }
 .site-nav a, .header-action { border-radius: 6px; padding: 8px 2px; }
 .site-nav a:hover, .header-action:hover, .text-link:hover { color: var(--coral); }
@@ -143,6 +140,43 @@ h1 { font-size: clamp(3.3rem, 8vw, 7.5rem); line-height: 0.92; margin-bottom: 26
 .page-title { margin: 0 auto; max-width: 1180px; }
 .page-title h1 { max-width: 900px; }
 .page-title .lede { color: rgba(255,255,255,0.78); font-size: 1.2rem; max-width: 760px; }
+.ecosystem-hero {
+  align-items: center;
+  background: #020403;
+  display: flex;
+  min-height: min(720px, 82vh);
+  overflow: hidden;
+  position: relative;
+}
+.ecosystem-hero::after {
+  background:
+    linear-gradient(90deg, rgba(2, 4, 3, 0.02) 22%, rgba(2, 4, 3, 0.34) 52%, rgba(2, 4, 3, 0.96) 76%),
+    linear-gradient(0deg, rgba(2, 4, 3, 0.64) 0%, transparent 32%);
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+}
+.ecosystem-hero-image {
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  object-position: center;
+  position: absolute;
+  width: 100%;
+  z-index: 0;
+}
+.ecosystem-hero-title {
+  margin-left: auto;
+  margin-right: 0;
+  max-width: 610px;
+  position: relative;
+  width: 43%;
+  z-index: 2;
+}
+.ecosystem-hero-title h1 { max-width: 610px; }
+.ecosystem-hero-title .lede { color: rgba(255,255,255,0.84); }
 .meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
 .meta-row span { border: 1px solid rgba(255,255,255,0.25); border-radius: 5px; color: rgba(255,255,255,0.86); font-size: 0.88rem; padding: 7px 10px; }
 .detail-grid { display: grid; gap: 42px; grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.55fr); }
@@ -175,10 +209,27 @@ h1 { font-size: clamp(3.3rem, 8vw, 7.5rem); line-height: 0.92; margin-bottom: 26
   .hero { min-height: 900px; padding-top: 112px; }
   .hero-panel { bottom: 20px; left: 18px; max-width: none; right: 18px; }
   .section-heading, .intro-grid, .standards-grid, .adopt-grid, .feature-grid, .contact-section, .detail-grid { grid-template-columns: 1fr; }
+  .ecosystem-hero {
+    align-items: flex-end;
+    min-height: 800px;
+    padding-top: 430px;
+  }
+  .ecosystem-hero::after {
+    background: linear-gradient(0deg, rgba(2, 4, 3, 0.98) 0%, rgba(2, 4, 3, 0.88) 36%, rgba(2, 4, 3, 0.08) 72%);
+  }
+  .ecosystem-hero-image {
+    height: 520px;
+    object-position: 31% center;
+  }
+  .ecosystem-hero-title {
+    margin: 0;
+    max-width: 760px;
+    width: 100%;
+  }
 }
 
 @media (max-width: 620px) {
-  .brand span:last-child { max-width: 160px; }
+  .brand-name { display: none; }
   .header-action { padding-inline: 10px; }
   h1 { font-size: 3.25rem; overflow-wrap: anywhere; }
   .hero { min-height: calc(100svh - 24px); }
@@ -194,6 +245,15 @@ h1 { font-size: clamp(3.3rem, 8vw, 7.5rem); line-height: 0.92; margin-bottom: 26
   .standard-footer { align-items: flex-start; flex-direction: column; }
   .site-footer { align-items: flex-start; flex-direction: column; }
   .page-title h1 { overflow-wrap: anywhere; }
+  .ecosystem-hero {
+    min-height: 690px;
+    padding-top: 350px;
+  }
+  .ecosystem-hero-image {
+    height: 390px;
+    object-position: 29% center;
+  }
+  .ecosystem-hero-title .lede { font-size: 1rem; }
   .profile-table { font-size: 0.78rem; table-layout: fixed; }
   .profile-table th, .profile-table td { overflow-wrap: anywhere; padding: 11px 6px; }
 }

@@ -10,7 +10,8 @@
     "verify:publication": "node scripts/verify-publication-artifact.mjs",
     "preview": "astro preview --host 127.0.0.1",
     "test:intelligence": "node --test scripts/intelligence/*.test.mjs",
-    "verify:intelligence": "node --test scripts/intelligence/*.test.mjs"
+    "verify:intelligence": "node --test scripts/intelligence/*.test.mjs",
+    "intelligence:discover": "node scripts/intelligence/discover.mjs"
   },
   "dependencies": {
     "astro": "^5.16.5"

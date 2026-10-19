@@ -34,9 +34,6 @@ export async function discover({ sources = feeds, fetcher = fetch } = {}) {
   for (const r of results) for (const c of r.candidates) unique.set(c.url, c);
   return { generated_at: new Date().toISOString(), editorial_status: "research_only", candidates: [...unique.values()], feed_results: results.map(({ source, error, candidates }) => ({ source, error, count: candidates.length })) };
 }
-if (process.argv[1] && import.meta.url === new URL("file://" + fileURLToPath(import.meta.url)).href) {
-  // Entry point comparison below is deliberately not used: execute via main module detection.
-}
 const invoked = process.argv[1] && fileURLToPath(import.meta.url) === (await import("node:path")).resolve(process.argv[1]);
 if (invoked) {
   const result = await discover();

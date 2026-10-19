@@ -1,0 +1,45 @@
+name: Intelligence research candidates
+on:
+  schedule:
+    # 02:17 Pacific: 09:17 UTC during PDT, 10:17 UTC during PST.
+    - cron: "17 9,10 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Check Pacific schedule
+        id: pacific
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          elif [ "$(TZ=America/Los_Angeles date +%H)" = "02" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+      - run: npm ci
+        if: steps.pacific.outputs.run == 'true'
+      - run: npm run test:intelligence
+        if: steps.pacific.outputs.run == 'true'
+      - run: npm run intelligence:discover
+        if: steps.pacific.outputs.run == 'true'
+      - uses: actions/upload-artifact@v4
+        if: steps.pacific.outputs.run == 'true'
+        with:
+          name: intelligence-research-candidates
+          path: research/intelligence/candidates.json
+          if-no-files-found: warn
+          retention-days: 14

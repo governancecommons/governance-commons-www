@@ -1,0 +1,28 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+const channels = [
+  { title: "Daily Brief", href: "/intelligence/daily", description: "Source-linked AI developments and governance implications." },
+  { title: "Perspectives", href: "/intelligence/perspectives", description: "Original editorial analysis and commentary." },
+  { title: "Weekly Review", href: "/intelligence/weekly", description: "A synthesis of the week's consequential developments." },
+  { title: "Standards Watch", href: "/intelligence/standards", description: "Evidence-based tracking of standards, policy and conformance developments." },
+];
+---
+<BaseLayout title="Intelligence | Governance Commons" description="Governance Commons Intelligence: evidence-backed AI news, governance analysis and standards monitoring.">
+  <section class="section">
+    <div class="section-heading">
+      <p class="eyebrow">Governance Commons Intelligence</p>
+      <h1>AI developments. Governance implications.</h1>
+      <p>Independent, evidence-backed reporting and analysis on human–AI governance, accountability, oversight and standards.</p>
+      <p>Publication requires source review and human editorial approval. Automated drafts are not published as verified reporting.</p>
+    </div>
+    <div class="standards-grid">
+      {channels.map((channel) => (
+        <article class="surface">
+          <h2>{channel.title}</h2>
+          <p>{channel.description}</p>
+          <p><a href={channel.href}>Explore section →</a></p>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

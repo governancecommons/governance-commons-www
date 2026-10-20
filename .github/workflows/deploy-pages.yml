@@ -26,9 +26,29 @@ jobs:
       - uses: actions/configure-pages@v5
       - run: npm ci
       - name: Validate Observatory catalog and navigation
+        id: observatory
         run: npm run verify:observatory
-      - run: npm run build
-      - run: npm run verify:publication
+      - name: Build site
+        id: site_build
+        run: npm run build
+      - name: Verify publication artifacts
+        id: publication
+        run: npm run verify:publication
+      - name: Publish QA summary
+        if: always()
+        env:
+          OBSERVATORY: ${{ steps.observatory.outcome }}
+          BUILD: ${{ steps.site_build.outcome }}
+          PUBLICATION: ${{ steps.publication.outcome }}
+        run: |
+          echo "## Governance Commons build checks" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Check | Result |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| --- | --- |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Observatory structural validation | $OBSERVATORY |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Astro site build | $BUILD |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Publication artifact verification | $PUBLICATION |" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "These checks do not establish external source accuracy or independent AI system evaluation." >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

@@ -1,7 +1,7 @@
-/** Observatory catalog v0.3. Editorial source references, not test results. */
+/** Observatory catalog v0.4. Editorial source references, not test results. */
 export type CatalogKind = "models" | "agents" | "protocols";
-export type CatalogEntry = { id:string; name:string; kind:CatalogKind; provider:string; version:string; summary:string; sourceUrl:string; sourceType:"official"; verifiedOn:string|null; status:"source-linked"|"needs-review"; evidence:"documentation-only"; notes:string };
-export const catalogVersion = "0.3.0";
+export type CatalogEntry = { id:string; name:string; kind:CatalogKind; provider:string; version:string; summary:string; sourceUrl:string; sourceType:"official"; verifiedOn:string|null; status:"source-linked"|"needs-review"; evidence:"documentation-only"; notes:string; sourceReviewedOn?:string|null; sourceSnapshot?:string|null; reviewRecordUrl?:string|null };
+export const catalogVersion = "0.4.0";
 export const catalogEntries: CatalogEntry[] = [
  {id:"openai-models",name:"OpenAI model documentation",kind:"models",provider:"OpenAI",version:"Provider index; model-specific version pending",summary:"Official model reference; individual model snapshots have not yet been normalized.",sourceUrl:"https://platform.openai.com/docs/models",sourceType:"official",verifiedOn:null,status:"needs-review",evidence:"documentation-only",notes:"Index entry, not a benchmarked model or a recommendation."},
  {id:"anthropic-models",name:"Claude model documentation",kind:"models",provider:"Anthropic",version:"Provider index; model-specific version pending",summary:"Official model documentation awaiting model-by-model catalog review.",sourceUrl:"https://docs.anthropic.com/en/docs/about-claude/models/overview",sourceType:"official",verifiedOn:null,status:"needs-review",evidence:"documentation-only",notes:"Index entry; model availability and identifiers require re-verification."},
@@ -19,3 +19,8 @@ export const catalogEntries: CatalogEntry[] = [
  {id:"otel",name:"OpenTelemetry",kind:"protocols",provider:"OpenTelemetry",version:"Specification version pending",summary:"Observability specifications and semantic conventions for telemetry.",sourceUrl:"https://opentelemetry.io/docs/specs/",sourceType:"official",verifiedOn:null,status:"needs-review",evidence:"documentation-only",notes:"Telemetry support does not establish governance compliance."}
 ];
 export const catalogKinds:CatalogKind[] = ["models","agents","protocols"];
+
+/** A source review verifies a documented claim, not system behavior or conformance. */
+export type ObservatoryReview = { entryId:string; reviewedOn:string; sourceUrl:string; checkedClaims:string[]; limitations:string[]; reviewer:string; method:"manual-primary-source"; };
+export const sourceReviews: ObservatoryReview[] = [];
+export function latestSourceReview(id:string): ObservatoryReview | undefined { return sourceReviews.filter(r=>r.entryId===id).sort((a,b)=>b.reviewedOn.localeCompare(a.reviewedOn))[0]; }

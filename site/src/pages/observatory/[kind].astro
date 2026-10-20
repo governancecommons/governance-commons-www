@@ -10,7 +10,28 @@ const heading = ({models:"Model sources",agents:"Agent sources",protocols:"Proto
 <section class="section white" style="padding-top:150px">
 <div class="section-heading"><p class="eyebrow">Observatory · Catalog v{catalogVersion}</p><h1>{heading}</h1><p>Research index, not a benchmark ranking. Records distinguish source documentation from independently reproduced measurements. No record on this page is marked independently verified.</p></div>
 <div class="actions" style="margin-bottom:24px"><a class="button ink" href="/observatory">← Observatory</a>{catalogKinds.filter(k=>k!==kind).map(k=><a class="text-link" href={`/observatory/${k}`}>{k.charAt(0).toUpperCase()+k.slice(1)} →</a>)}</div>
-<div class="standards-grid">{entries.map(entry => <article class="surface standard-card"><p class="eyebrow">{entry.provider} · {entry.status === "needs-review" ? "Needs review" : "Source linked"}</p><h2>{entry.name}</h2><p>{entry.summary}</p><p><strong>Version:</strong> {entry.version}</p><p><strong>Evidence:</strong> Documentation only · <strong>Last independently verified:</strong> Not yet verified</p><p>{entry.notes}</p><a class="text-link" href={entry.sourceUrl} rel="noopener noreferrer" target="_blank">Primary source ↗</a></article>)}</div>
-<div class="surface notice" style="margin-top:28px"><strong>Methodology:</strong> A primary-source link is not proof of a current model identifier, interoperability, security, conformance or performance. All entries require editorial verification and dated snapshots before claims or comparative rankings can be published.</div>
+<div class="surface" style="margin-bottom:22px"><label for="catalog-search"><strong>Search catalog</strong></label><input id="catalog-search" type="search" placeholder="Search names, providers, descriptions…" style="display:block;width:100%;padding:12px;margin-top:8px;margin-bottom:12px;border:1px solid #888;border-radius:8px" /><label for="catalog-status"><strong>Source status</strong></label><select id="catalog-status" style="display:block;padding:10px;margin-top:8px;border:1px solid #888;border-radius:8px"><option value="all">All records</option><option value="source-linked">Source linked</option><option value="needs-review">Needs review</option></select><p id="catalog-count" aria-live="polite" style="margin-top:12px">Showing {entries.length} of {entries.length} records</p></div><div class="standards-grid" id="catalog-results">{entries.map(entry => <article class="surface standard-card" data-search={`${entry.name} ${entry.provider} ${entry.summary} ${entry.version} ${entry.notes}`.toLowerCase()} data-status={entry.status}><p class="eyebrow">{entry.provider} · {entry.status === "needs-review" ? "Needs review" : "Source linked"}</p><h2>{entry.name}</h2><p>{entry.summary}</p><p><strong>Version:</strong> {entry.version}</p><p><strong>Evidence:</strong> Documentation only · <strong>Last independently verified:</strong> Not yet verified</p><p>{entry.notes}</p><a class="text-link" href={entry.sourceUrl} rel="noopener noreferrer" target="_blank">Primary source ↗</a></article>)}</div>
+<p id="catalog-empty" hidden>No matching records. Try a different search or status.</p><div class="surface notice" style="margin-top:28px"><strong>Methodology:</strong> A primary-source link is not proof of a current model identifier, interoperability, security, conformance or performance. All entries require editorial verification and dated snapshots before claims or comparative rankings can be published.</div>
 </section>
+<script>
+const search = document.querySelector<HTMLInputElement>("#catalog-search");
+const status = document.querySelector<HTMLSelectElement>("#catalog-status");
+const cards = Array.from(document.querySelectorAll<HTMLElement>("#catalog-results [data-search]"));
+const count = document.querySelector<HTMLElement>("#catalog-count");
+const empty = document.querySelector<HTMLElement>("#catalog-empty");
+function filterCatalog() {
+ const term = (search?.value ?? "").trim().toLocaleLowerCase();
+ const selected = status?.value ?? "all";
+ let shown = 0;
+ for (const card of cards) {
+  const visible = (selected === "all" || card.dataset.status === selected) && (card.dataset.search ?? "").includes(term);
+  card.hidden = !visible;
+  if (visible) shown++;
+ }
+ if (count) count.textContent = `Showing ${shown} of ${cards.length} records`;
+ if (empty) empty.hidden = shown !== 0;
+}
+search?.addEventListener("input", filterCatalog);
+status?.addEventListener("change", filterCatalog);
+</script>
 </BaseLayout>

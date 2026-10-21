@@ -17,12 +17,14 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 24
           cache: npm
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
       - run: npm ci
       - name: Validate Observatory catalog and navigation
         id: observatory
@@ -50,7 +52,7 @@ jobs:
           echo "| Publication artifact verification | $PUBLICATION |" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "These checks do not establish external source accuracy or independent AI system evaluation." >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614e5
         with:
           path: dist
 
@@ -66,4 +68,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db901f4f0f6d9a2b92b5ac3e59d9a0d29e8a72

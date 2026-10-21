@@ -1,0 +1,22 @@
+name: Portal foundation checks
+on:
+  pull_request:
+    paths:
+      - 'docs/portal/**'
+      - 'scripts/portal/**'
+      - '.github/workflows/portal-foundation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  policy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node --test scripts/portal/*.test.mjs
+      - run: npm ci
+      - run: npm run build
+      - run: npm run verify:publication

@@ -1,0 +1,29 @@
+name: Observatory PR checks
+on:
+  pull_request:
+    paths:
+      - 'scripts/**'
+      - 'site/src/data/observatoryCatalog.ts'
+      - 'site/src/pages/observatory*'
+      - 'site/src/pages/observatory/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/observatory-pr.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run verify:observatory
+      - run: npm run verify:observatory:evidence
+      - run: npm run test:observatory:evidence
+      - run: npm run build
+      - run: npm run verify:publication

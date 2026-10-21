@@ -1,0 +1,31 @@
+name: Website pull request verification
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Verify Observatory catalog
+        run: npm run verify:observatory
+      - name: Verify Observatory evidence gate
+        run: npm run verify:observatory:evidence
+      - name: Build static site
+        run: npm run build
+      - name: Verify publication artifacts
+        run: npm run verify:publication

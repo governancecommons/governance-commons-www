@@ -28,6 +28,8 @@ jobs:
       - name: Validate Observatory catalog and navigation
         id: observatory
         run: npm run verify:observatory
+      - name: Validate Observatory evidence publication gate
+        run: npm run verify:observatory:evidence
       - name: Build site
         id: site_build
         run: npm run build

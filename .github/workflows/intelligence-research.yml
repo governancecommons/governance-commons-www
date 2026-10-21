@@ -36,10 +36,14 @@ jobs:
         if: steps.pacific.outputs.run == 'true'
       - run: npm run intelligence:discover
         if: steps.pacific.outputs.run == 'true'
+      - run: npm run intelligence:prepare
+        if: steps.pacific.outputs.run == 'true'
       - uses: actions/upload-artifact@v4
         if: steps.pacific.outputs.run == 'true'
         with:
           name: intelligence-research-candidates
-          path: research/intelligence/candidates.json
+          path: |
+            research/intelligence/candidates.json
+            research/intelligence/review-packets.json
           if-no-files-found: warn
           retention-days: 14

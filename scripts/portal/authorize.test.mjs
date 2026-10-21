@@ -1,0 +1,15 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { authorize } from "./authorize.mjs";
+const actor = { id: "reviewer-1", authenticated: true, memberships: [{ workspace_id: "editorial", role: "editor" }] };
+const resource = { workspace_id: "editorial", author_id: "author-1", revision_id: "rev-2", reviewed_revision_id: "rev-2", status: "awaiting_approval" };
+test("deny unauthenticated actors", () => assert.equal(authorize({ actor: { ...actor, authenticated: false }, action: "article:approve", resource }).allowed, false));
+test("deny unknown actions", () => assert.equal(authorize({ actor, action: "admin:everything", resource }).allowed, false));
+test("deny cross-workspace access", () => assert.equal(authorize({ actor, action: "article:approve", resource: { ...resource, workspace_id: "other" } }).allowed, false));
+test("deny self approval", () => assert.equal(authorize({ actor, action: "article:approve", resource: { ...resource, author_id: actor.id } }).allowed, false));
+test("deny stale review", () => assert.equal(authorize({ actor, action: "article:approve", resource: { ...resource, reviewed_revision_id: "rev-1" } }).allowed, false));
+test("deny invalid workflow state", () => assert.equal(authorize({ actor, action: "article:approve", resource: { ...resource, status: "draft" } }).allowed, false));
+test("allow scoped independent approval", () => assert.equal(authorize({ actor, action: "article:approve", resource }).allowed, true));
+test("deny revoked grants", () => assert.equal(authorize({ actor: { ...actor, memberships: [{ ...actor.memberships[0], revoked_at: "2026-10-21T00:00:00Z" }] }, action: "article:approve", resource }).allowed, false));
+test("deny expired grants", () => assert.equal(authorize({ actor: { ...actor, memberships: [{ ...actor.memberships[0], expires_at: "2026-01-01T00:00:00Z" }] }, action: "article:approve", resource, now: new Date("2026-10-21T00:00:00Z") }).allowed, false));
+test("deny governance approval to editorial role", () => assert.equal(authorize({ actor, action: "governance:approve", resource }).allowed, false));

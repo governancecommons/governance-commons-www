@@ -1,6 +1,6 @@
 # GC-ZT-08 — Website Zero Trust evidence and assurance register
 
-**Status:** INITIAL EVIDENCE REGISTER COMPLETE; INDEPENDENT ASSURANCE **OPEN**  
+**Status:** INITIAL WEBSITE HARDENING DEVELOPMENT PHASE CLOSED; ZERO TRUST ASSURANCE **OPEN**  
 **Evidence cutoff:** 2026-10-22  
 **Scope:** `governancecommons/governance-commons-www`, public website, GitHub PR/build/Pages publishing chain, and website-facing Observatory publication controls. **Not** GC Portal, Observatory Core, Registry as a whole, or the broader Governance Commons ecosystem.
 
@@ -31,9 +31,41 @@ Source or GitHub run links are public; private identity, credential, membership 
 | ZT-05b | Defense-in-depth HTTP security headers | **OPEN — HOSTING DECISION** | [GC-ZT-05 assessment](gc-zt-05-live-header-assessment.md) records six headers absent in measured final HTML responses | Risk-owner decision: accept Pages constraint with compensating controls or explicitly authorize and test a controllable edge; CSP compatibility and HSTS subdomains must be tested before any rollout |
 | ZT-06a | Public Observatory evidence publication validation | **PARTIAL** | [Publication verification workflow](../../.github/workflows/deploy-pages.yml) runs Observatory evidence/publication checks; post-deploy checks green | Verify semantic accuracy, provenance, immutable versioned content and producer/publisher segregation beyond pass/fail schema gates |
 | ZT-06b | Authenticated independent human publication approval | **OPEN** | [Approval modes](gc-zt-approval-operating-modes.md) specifies future Portal GitHub-App check; no live implementation verified | GC Portal team must build identity-bound, commit-SHA-specific approval with fail-closed check; scope outside website. Solo exception doesn't mean approval exists |
-| ZT-07a | Incident response and recovery procedures | **DOCUMENTED ONLY** | [GC-ZT-07 runbook](gc-zt-07-incident-recovery.md), merged PR #31 | Appoint commander/backup, define private incident contact/evidence, test tabletop and verify authority |
-| ZT-07b | Tested rollback, credential rotation, DNS recovery | **OPEN — NOT EXERCISED** | Runbook explicitly identifies all scenarios NOT EXERCISED | Tabletop safely first; then controlled practice without breaking public availability; record measured results |
+| ZT-07a | Incident response and recovery procedures | **DESK WALKTHROUGH ONLY; OPERATIONS NOT EXERCISED** | [GC-ZT-07 runbook](gc-zt-07-incident-recovery.md); [GC-ZT-09 desk exercise](gc-zt-09-publication-integrity-tabletop.md) | Appoint commander/backup, define private incident contact/evidence, conduct authorized operational tabletop and verify authority |
+| ZT-07b | Tested rollback, credential rotation, DNS recovery | **OPEN — NOT EXERCISED** | GC-ZT-09 was a source-backed desk walkthrough, not a live or sandbox rollback exercise | Conduct authorized operational tabletop and controlled recovery practice without breaking public availability; record measured results |
 | ZT-08 | Independent security assurance and control closure | **OPEN** | This evidence register and linked technical runs | Independent reviewer must examine underlying configs, confirm exceptions, perform targeted abuse-case testing, sign dated findings and remediation ownership |
+
+## Initial website hardening phase closure — 2026-10-22
+
+**Decision:** The website's initial ZTA-oriented **development phase is CLOSED** at the owner's explicit direction. This is a **phase and handoff decision**, not a claim that ZT-01–ZT-08 controls are fully remediated or that independent Zero Trust assurance has passed.
+
+**Production reference:** [Run 39820709771](https://github.com/governancecommons/governance-commons-www/actions/runs/39820709771) completed successfully after GC-ZT-12 contract PR #39. The closure PR requires its own CI and post-merge deployment evidence; do not infer its deployment in advance.
+
+**Delivered technical and governance work:** PRs #28–#39: pinned workflow actions, header/hosting risk inventory, main ruleset inspection, incident runbook, three-mode governance with [time-bounded SOLO exception](gc-zt-approval-operating-modes.md), evidence register, publication-integrity desk exercise and fixtures, observational build-to-live digest comparisons and bounded transient error retries, and a [Portal publication authorization consumer contract](gc-zt-12-publication-authorization-contract.md). The [GC-ZT-11 fidelity evidence](gc-zt-11-publication-fidelity.md) includes a production run with seven exact matches and one HTTP 503; transient retries were merged, but a **subsequent checked observation is needed** before any hard gate.
+
+### Preserved residual security and assurance backlog
+
+The following is **open**, not implicitly accepted. Store redacted public summaries here and private administrative evidence in access-controlled storage. Record owners and acceptance decisions in future dated PRs or governance records.
+
+| Residual ID | Priority | Outstanding action / acceptance evidence | Ownership boundary |
+| --- | --- | --- | --- |
+| R-01 | P0 | Privately verify org MFA/passkeys, privileged accounts, external collaborators, installed Apps, secrets scanning/alerts and recovery; retain verifier/date | GC organization administrator |
+| R-02 | P0 | Confirm actual effective `main` check source binding and `github-pages` environment source restrictions; verify OIDC runtime claims and registrar access | GC repository/hosting administrator |
+| R-03 | P0 | Maintain `SOLO-EXC-2026-10-22` with required CI and no independent-approval claim; **review by 2027-01-20** or upon triggering event | Governance owner |
+| R-04 | P0 | Verify publication authorization against current commit and authenticated identity; implement sandbox-only Portal decision engine/GitHub App with fail-closed negative tests **outside website repo** | `governance-commons-portal`; GitHub admin for later enforcement |
+| R-05 | P1 | Decide accept/risk-mitigate the six missing security headers or approve separately tested hosting-edge change; do not alter DNS/TLS without explicit approval | Website risk/hosting owner |
+| R-06 | P1 | Exercise incident commander authority, private contact route, controlled rollback, compromised-token handling and DNS recovery; record dated results and retest | GC security administrator |
+| R-07 | P1 | Recheck GC-ZT-11 production fidelity after bounded retries. Evaluate cache/edge variability, then separately approve any **scoped** blocking digest gate; build manifest is not independent editorial authorization | Website build/publishing owner |
+| R-08 | P1 | Validate dependency graph/Dependabot and secret scanning, upstream action provenance, SBOM/SLSA strategy, and manually dispatched specialized workflows after action pinning | Website supply-chain maintainer |
+| R-09 | P1 | Independently test Observatory source provenance, producer/publisher separation, semantic content integrity and approval attribution | Website/Observatory boundary owners |
+| R-10 | P2 | Arrange independent external ZTA-focused assurance, document findings, exceptions, verifier, date, retest, and final scope-limited conclusion | Independent reviewer / governance owner |
+| R-11 | P2 | Finish manual accessibility acceptance, review Lighthouse performance 75/100, and obtain applicable RFC-0001 G-1 reviewer acceptance; these are separate website quality/governance tasks | Website maintainer / RFC owner |
+
+**Non-closure rules:** No automatic mode downgrade; no weakening GitHub branch protections; no claim of independently reviewed PRs under SOLO; no claim that measured byte equality authenticates content; no ZTA-compliant/verified claim; no claim that a desk exercise proved operational recovery.
+
+**Reopen triggers:** A security incident, failed required publishing gate, critical new threat, changed GitHub/Pages/DNS trust boundary, Portal integration that expands publication privileges, expired SOLO decision or explicit owner request. Otherwise handle remaining work as tracked security-closure tasks rather than continuing the original website development milestone.
+
+**Handoff:** Website public presentation and post-deploy checks remain in `governance-commons-www`. Implement future identity-bound approval engine and UI in `governance-commons-portal` under [GC-ZT-12](gc-zt-12-publication-authorization-contract.md). This is a contract/handoff, **not** a claim that Portal implementation exists.
 
 ### Related acceptance outside ZTA core
 

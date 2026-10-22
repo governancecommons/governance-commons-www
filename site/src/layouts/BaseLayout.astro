@@ -50,7 +50,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
       </nav>
       <a class="header-action" href="https://github.com/governancecommons">GitHub</a>
     </header>
-    <main id="main-content">
+    <main id="main-content" tabindex="-1">
       <slot />
     </main>
     <footer class="site-footer">

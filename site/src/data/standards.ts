@@ -41,7 +41,7 @@ export const components: Component[] = [
     ],
     capabilities: ["Identity and authority boundaries", "Structured handoff envelopes", "Runtime constraints and failure handling", "Portable audit and telemetry declarations"],
     adoption: ["Pin Agent Dossier v1.1.0 or another explicitly selected release.", "Create a dossier document for each governed agent role.", "Use the published Python toolkit only for versions it explicitly supports; otherwise document manual checks."],
-    conformance: "Python governance-commons 0.2.0 provides structural dossier validation. This is self-reported conformance, not certification.",
+    conformance: "The published Python governance-commons 0.2.0 package does not expose Agent Dossier validation. Structural dossier validation exists in repository source; cite the exact source commit and validation procedure rather than claiming published-package support. Validation is not certification.",
   },
   {
     slug: "agent-matrix",
@@ -176,7 +176,7 @@ export const components: Component[] = [
       { label: "Python package", href: "https://pypi.org/project/governance-commons/0.2.0/" },
       { label: "Toolkit source", href: "https://github.com/governancecommons/governance-commons-registry" },
     ],
-    capabilities: ["ONS and Agent Dossier validation in Python", "Governance Record validation in Python", "Capability-contract validation and discovery", "ConformanceReport output"],
+    capabilities: ["ONS validation in published Python 0.2.0; Agent Dossier validation in source only", "Governance Record validation in Python", "Capability-contract validation and discovery", "ConformanceReport output"],
     adoption: ["Install a specific published package version.", "Check the language-specific support matrix before relying on a validator.", "Do not claim npm 0.2.0 availability until it is present in the registry."],
     conformance: "Python and JavaScript surfaces are not at feature parity. npm currently exposes 0.1.1; the 0.2.0 source and Trusted Publishing workflow do not prove publication.",
   },

@@ -21,6 +21,6 @@ assert.equal(modified.results[0].status, "MISMATCH");
 assert(modified.results.slice(1).every(x => x.status === "MATCH"));
 const broken = await inspectLive(manifest, mock(null, origin + "/robots.txt"));
 assert.equal(broken.results[1].status, "ERROR");
-assert.throws(() => inspectLive({}), undefined); // async rejection handled separately below
+await assert.rejects(inspectLive({}), /invalid manifest/);
 assert.equal(digest(Buffer.from("x")).length, 64);
 console.log("GC-ZT-11 fixture tests: full match, tampered homepage, HTTP failure PASS.");

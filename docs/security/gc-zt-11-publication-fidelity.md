@@ -24,3 +24,12 @@ The initial live-byte comparison is **observational** (nonblocking) because GitH
 - [ ] Scoped fail-closed rollout + independent authorization requires separate PR, owner approval and negative testing.
 
 **Evidence classification:** This proves neither complete content integrity nor ZTA compliance. A manifest produced by an attacker-controlled build cannot authenticate the underlying editorial content.
+
+
+## First live observations (2026-10-22)
+
+[Deployment workflow run 39819486546](https://github.com/governancecommons/governance-commons-www/actions/runs/39819486546) completed successfully, including 8/8 ordinary live-publication checks. Build-to-live bytes matched exactly for seven paths. The eighth path (`runtime-contract.schema.json`) returned transient HTTP 503 during its **separate** one-attempt fidelity check, so **7/8 MATCH** is not evidence of content mismatch or tampering. The fidelity step remained observational.
+
+This follow-up retries the same canonical URL up to three times **only** for transient 429/500/502/503/504 responses or fetch errors; bounded delays are 500ms and 1000ms. A fetched byte mismatch, canonical redirect, or non-retryable HTTP status is retained immediately and cannot be concealed by retries. Reports include attempt counts. Negative fixture tests exercise persistent 500, transient 503, tampered byte contents, and redirect rejection.
+
+**Gate decision remains OPEN:** one production observation of a transient 503 does not justify switching byte comparisons to mandatory failure. Observe at least one new post-deploy report, investigate repeated errors, and determine serving consistency before approving a blocking gate.

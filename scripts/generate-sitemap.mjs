@@ -22,13 +22,13 @@ for (const page of pages) {
     : "/" + relative.replace(/\/index\.html$/, "").replace(/\.html$/, "");
   const html = await readFile(page, "utf8");
   // The canonical tag is defined by the shared Astro layout and must match each indexed page.
-  const match = html.match(/<link\\s+rel="canonical"\\s+href="([^"]+)"/i);
+  const match = html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i);
   if (!match) throw new Error(`Canonical tag missing in ${relative}`);
   const canonical = new URL(match[1]);
   if (canonical.origin !== origin || canonical.search || canonical.hash) {
     throw new Error(`Unexpected canonical URL in ${relative}: ${match[1]}`);
   }
-  const normalize = (value) => value === "/" ? "/" : value.replace(/\\/$/, "");
+  const normalize = (value) => value === "/" ? "/" : value.replace(/\/$/, "");
   if (normalize(canonical.pathname) !== normalize(pathname)) {
     throw new Error(`Canonical path mismatch in ${relative}: ${match[1]}`);
   }

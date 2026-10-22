@@ -330,3 +330,10 @@ html { scroll-padding-top: 124px; }
 .ecosystem-hero .eyebrow,
 .contact-section .eyebrow,
 .support-section .eyebrow { color: var(--gold); }
+
+/* WWW-18: audited homepage contrast, scoped to the actual affected surfaces. */
+.section:not(.contact-section):not(.support-section) .button.secondary {
+  color: var(--green);
+  border-color: var(--green);
+}
+.contact-section .eyebrow { color: #ffe39a; }

@@ -35,3 +35,20 @@ for (const filename of schemas) {
 }
 
 console.log(`Verified CNAME and ${schemas.length} Agent Dossier schema artifacts in dist/.`);
+
+const robots = await requireFile("robots.txt");
+if (!robots.includes("Sitemap: https://governancecommons.org/sitemap.xml")) {
+  throw new Error("robots.txt must advertise the canonical sitemap URL");
+}
+const sitemap = await requireFile("sitemap.xml");
+if (!sitemap.includes("<loc>https://governancecommons.org/</loc>")) {
+  throw new Error("sitemap.xml must include the canonical homepage");
+}
+if (sitemap.includes("/404</loc>")) {
+  throw new Error("404 page must not be indexed in sitemap.xml");
+}
+const notFound = await requireFile("404.html");
+if (!notFound.includes("Page not found") || !notFound.includes('href="/"')) {
+  throw new Error("Custom 404 page is missing its title or homepage recovery link");
+}
+console.log("Verified discovery, sitemap, and 404 artifacts.");

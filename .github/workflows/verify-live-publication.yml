@@ -1,0 +1,31 @@
+name: Verify live Governance Commons publication
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Display runner DNS resolution
+        run: |
+          getent ahosts governancecommons.org || true
+      - name: Verify public URLs, TLS, and canonical schemas
+        id: verify
+        run: node scripts/verify-live-publication.mjs
+      - name: Preserve verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-publication-evidence
+          path: live-publication-report.json
+          if-no-files-found: warn

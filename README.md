@@ -54,10 +54,12 @@ also have `governancecommons.org` configured as its custom domain, and public
 DNS must point only to the records required by GitHub Pages. The checked-in
 `public/CNAME` file is necessary but does not configure those external settings.
 
-As of 2026-10-07, the five schemas return `200` from the repository's default
-GitHub Pages address, while their canonical `governancecommons.org` URLs return
-`404`. RFC-0001 gate G-1 therefore remains open until the Pages custom-domain
-setting and DNS are corrected and the canonical URLs are verified publicly.
+The last documented check (2026-10-07) reported `200` for five schemas at the
+repository's default GitHub Pages address and `404` for canonical
+`governancecommons.org` URLs. This is historical evidence, **not a current DNS
+or HTTP result**. Keep RFC-0001 gate G-1 unverified until GitHub Pages custom-
+domain settings, DNS, TLS, and all canonical schema URLs are tested again and
+recorded with a timestamp and response evidence.
 
 The legacy `netlify.toml` is retained as a portable static-host configuration,
 but it is not the production deployment path.

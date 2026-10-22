@@ -114,6 +114,8 @@ h1 { font-size: clamp(3.3rem, 8vw, 7.5rem); line-height: 0.92; margin-bottom: 26
 .metric-label { color: var(--muted); display: block; font-size: 0.86rem; line-height: 1.25; margin-top: 7px; }
 
 @media (min-width: 1200px) {
+  .hero { background: var(--green-dark); }
+  .hero-image { left: 56%; object-position: 58% center; right: 0; width: 44%; }
   .hero-actions { bottom: 82px; left: clamp(18px, 5vw, 72px); position: absolute; z-index: 3; }
 }
 

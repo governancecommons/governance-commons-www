@@ -60,12 +60,35 @@ Portal owns UX, identity-bound decision collection, review evidence and revocati
 
 A future Portal UI may present these three policy choices, but **a UI selection by itself never relaxes GitHub controls**. The backend must validate authorization and complete the explicit policy change workflow.
 
+## Formal decision — SOLO-EXC-2026-10-22
+
+**Decision:** ACCEPTED by the project's sole maintainer on **2026-10-22** in the Governance Commons project conversation. This is an explicit governance acceptance of the *lack of a second-person approving review*, not an exemption from PR checks, authenticated administration, or publication verification.
+
+| Field | Decision |
+| --- | --- |
+| Decision ID | `SOLO-EXC-2026-10-22` |
+| Decision date (UTC calendar date) | 2026-10-22 |
+| Accountable policy owner | Governance Commons sole maintainer (repository administrator role) |
+| Scope | `governancecommons/governance-commons-www`, protected `main` PR review-count requirement only |
+| Mode | **SOLO** |
+| Accepted exception | GitHub `required_approving_review_count: 0` while the project has one qualified maintainer |
+| Why | Requiring a separate approving GitHub reviewer without an eligible second reviewer would block normal maintenance; self-approval would not constitute independent review |
+| Mandatory safeguards | PRs and designated required CI checks; no routine bypass, force push or deletion; SHA-pinned workflow actions; auditable GitHub commits and deployment verification |
+| Triggered review | Immediately if a qualified independent reviewer joins, if Portal-Governed enforcement becomes production-ready, after unauthorized change/incident, or on material trust-boundary change |
+| Scheduled review | **2027-01-20** (90-day review horizon) |
+| Expiry behavior | At review deadline, **governance reapproval is required** to keep claiming the exception as current; expiry does **not** automatically alter GitHub branch settings or disable deployments |
+| Attestation limits | Not evidence of independent human review, ZTA conformance, MFA enforcement, or approved production Portal checks |
+
+**Decision evidence:** Explicit sole-maintainer direction in the project conversation on 2026-10-22: formally accept the current Solo Maintainer exception. This repo record is the durable public policy evidence; any private identity/administrative evidence must stay out of the public repo. Approval of this exception is distinct from independently verifying the settings.
+
+**Follow-up:** Before 2027-01-20, recheck `Protect main` ruleset ID `25527454`, required-check publishers, access roles, any incidents, and feasibility of Portal-Governed or independent approvals. Document continuation, replacement, or retirement in a new dated decision record. This is an exceptional governance mode with transparent limitations, not an unrestricted security toggle.
+
 ## Current evidence and activation record
 
 As of 2026-10-22, the GitHub ruleset `Protect main` (`25527454`) requires PRs and `verify`/`review` checks, blocks deletion and non-fast-forward, lists no bypass actors, and requires **0 approving reviews**. See [GC-ZT-01/02/04](gc-zt-01-02-04-admin-evidence.md).
 
 - [x] Define the three approval modes and invariant controls.
-- [ ] Formally accept SOLO exception with named policy owner, dated review horizon and recorded decision.
+- [x] Formally accept SOLO exception with accountable role, dated review horizon and recorded decision (see decision record below).
 - [ ] Verify every required check is bound to the intended trusted publisher.
 - [ ] Design, implement and independently validate Portal App approval enforcement.
 - [ ] Recruit/authorize independent reviewer(s) and test required-review configuration before switching to INDEPENDENT.

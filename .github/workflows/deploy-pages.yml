@@ -73,3 +73,37 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+
+  verify-production:
+    name: Verify published website
+    permissions:
+      contents: read
+    needs: deploy
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Verify live content after Pages deployment
+        id: live
+        shell: bash
+        run: |
+          # Retry briefly because the Pages edge may not expose the new artifact immediately.
+          for attempt in 1 2 3 4 5; do
+            echo "Production verification attempt $attempt of 5"
+            if node scripts/verify-live-publication.mjs; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 5 ]; then sleep 15; fi
+          done
+          exit 1
+      - name: Upload live verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: post-deploy-live-verification
+          path: live-publication-report.json
+          if-no-files-found: warn

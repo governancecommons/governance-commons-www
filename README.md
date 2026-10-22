@@ -63,3 +63,9 @@ recorded with a timestamp and response evidence.
 
 The legacy `netlify.toml` is retained as a portable static-host configuration,
 but it is not the production deployment path.
+
+## Live publication verification
+
+After merging and deploying site changes, open GitHub Actions → **Verify live Governance Commons publication** → **Run workflow** on `main`. The read-only job records an actionable URL-by-URL report, runner DNS evidence, and a JSON artifact. A green run verifies the listed HTTPS requests and responses from that runner, **not** the full RFC-0001 G-1 acceptance gate or independent GitHub Pages ownership/DNS configuration.
+
+Use `docs/www-18-browser-accessibility-checklist.md` to conduct and record hands-on keyboard, mobile, zoom, motion, contrast, and assistive-technology/browser reviews. These require actual browser observations; source changes alone do not establish WCAG conformance.

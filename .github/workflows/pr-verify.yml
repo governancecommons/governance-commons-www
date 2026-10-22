@@ -27,6 +27,8 @@ jobs:
         run: npm run verify:observatory:evidence
       - name: Reproduce publication-integrity tampering fixture
         run: node scripts/test-publication-integrity.mjs
+      - name: Test build-to-live fidelity behavior with controlled fixtures
+        run: node scripts/test-publication-fidelity.mjs
       - name: Build static site
         run: npm run build
       - name: Verify publication artifacts

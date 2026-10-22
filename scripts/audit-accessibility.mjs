@@ -41,6 +41,11 @@ try {
       if (entry.notes.length || entry.violations.some(v=>v.impact==="serious"||v.impact==="critical")) report.failures.push({route,width,notes:entry.notes,serious:entry.violations.filter(v=>v.impact==="serious"||v.impact==="critical").map(v=>v.id)});
       report.cases.push(entry);
       console.log(label + ": " + entry.violations.length + " axe findings; " + entry.notes.length + " structural findings");
+      for (const violation of entry.violations) {
+        console.log("  " + violation.impact + " " + violation.id + ": " + violation.nodes.length + " representative nodes");
+        for (const node of violation.nodes) console.log("    " + JSON.stringify(node.target) + ": " + String(node.summary).replaceAll("\\n", " ").slice(0,350));
+      }
+      for (const note of entry.notes) console.log("  NOTE: " + note);
     }
     await context.close();
   }

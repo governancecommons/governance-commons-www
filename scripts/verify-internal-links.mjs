@@ -54,6 +54,8 @@ for (const full of pages) {
 
 let inspected = 0;
 for (const [relative, page] of index) {
+  // GitHub Pages serves 404.html as a fallback, not at a public /404/ route.
+  if (relative === "404.html") continue;
   const base = new URL(page.route, origin);
   for (const rawHref of attrs(page.html, "href")) {
     const href = decodeHtml(rawHref).trim();

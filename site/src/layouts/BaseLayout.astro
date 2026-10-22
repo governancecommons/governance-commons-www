@@ -10,6 +10,7 @@ const {
   title = "Governance Commons | Sociotechnical Governance for Human–AI Systems",
   description = "A maintainer-led commons for specifications, evidence, tooling, research, education, and community work on governed human–AI and multi-agent systems.",
 } = Astro.props;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
 ---
 
 <!doctype html>
@@ -19,14 +20,20 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content="https://governancecommons.org/assets/governance-hero.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="https://governancecommons.org/assets/governance-hero.png" />
     <link rel="icon" type="image/svg+xml" href="/assets/governance-commons-mark.svg" />
   </head>
   <body>
+    <a class="skip-to-content" href="#main-content">Skip to main content</a>
     <header class="site-header" data-elevate>
       <a class="brand" href="/" aria-label="Governance Commons home">
         <img class="brand-mark" src="/assets/governance-commons-mark.svg" alt="" width="48" height="48" />
@@ -43,13 +50,17 @@ const {
       </nav>
       <a class="header-action" href="https://github.com/governancecommons">GitHub</a>
     </header>
-    <main>
+    <main id="main-content">
       <slot />
     </main>
     <footer class="site-footer">
       <span>© {new Date().getFullYear()} Governance Commons · <a href="/about">About</a></span>
       <span>Specifications, evidence, tooling, and public learning for governed human–AI systems</span>
     </footer>
+    <style>
+      .skip-to-content { position: absolute; left: 1rem; top: -10rem; z-index: 1000; padding: .75rem 1rem; background: #fff; color: #002244; border: 2px solid #002244; }
+      .skip-to-content:focus { top: 1rem; }
+    </style>
     <script>
       const header = document.querySelector("[data-elevate]");
       const updateHeader = () => header?.classList.toggle("is-elevated", window.scrollY > 8);

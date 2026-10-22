@@ -36,6 +36,8 @@ jobs:
       - name: Build site
         id: site_build
         run: npm run build
+      - name: Verify internal navigation and anchors
+        run: npm run verify:navigation
       - name: Verify publication artifacts
         id: publication
         run: npm run verify:publication

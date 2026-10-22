@@ -14,7 +14,8 @@
     "preview": "astro preview --host 127.0.0.1",
     "verify:observatory": "node scripts/verify-observatory.mjs",
     "verify:observatory:evidence": "node scripts/verify-observatory-evidence.mjs",
-    "test:observatory:evidence": "node scripts/test-observatory-evidence.mjs"
+    "test:observatory:evidence": "node scripts/test-observatory-evidence.mjs",
+    "verify:public-claims": "node scripts/verify-public-claims.mjs"
   },
   "dependencies": {
     "astro": "^7.4.2"

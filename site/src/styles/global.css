@@ -320,3 +320,13 @@ html { scroll-padding-top: 124px; }
   html { scroll-behavior: auto; }
   .site-header, .button { transition: none; }
 }
+
+/* WCAG-oriented contrast fix: retain bright gold on dark surfaces, use dark
+   ochre for small labels and step numbers on light sections. */
+:root { --gold-ink: #80551a; }
+.eyebrow, .step { color: var(--gold-ink); }
+.hero .eyebrow,
+.page-hero .eyebrow,
+.ecosystem-hero .eyebrow,
+.contact-section .eyebrow,
+.support-section .eyebrow { color: var(--gold); }

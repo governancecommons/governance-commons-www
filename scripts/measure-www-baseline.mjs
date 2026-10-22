@@ -16,7 +16,7 @@ for(const path of paths){
       const target=new URL(entry.redirect_location??"",entry.url);
       const allowed=new URL(entry.url);
       // Static-site canonical slash redirects are expected; never follow arbitrary origins.
-      if(target.origin!==allowed.origin||target.pathname!==allowed.pathname.replace(/\\/$/,"")+"/"){
+      if(target.origin!==allowed.origin||target.pathname!==allowed.pathname+"/"){
         throw Error("Unexpected redirect target: "+target.href);
       }
       res=await fetch(target.href,{redirect:"manual",signal:AbortSignal.timeout(20000)});

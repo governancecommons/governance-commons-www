@@ -31,6 +31,8 @@ jobs:
         run: npm run verify:observatory
       - name: Validate Observatory evidence publication gate
         run: npm run verify:observatory:evidence
+      - name: Verify public claims consistency
+        run: npm run verify:public-claims
       - name: Build site
         id: site_build
         run: npm run build

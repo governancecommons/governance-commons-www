@@ -2,7 +2,7 @@ import { strict as assert } from "node:assert";
 import { createManifest, inspectLive, paths, digest, origin } from "./publication-fidelity.mjs";
 const fixture = new Map(paths.map(([source, urlPath], i) => [source, Buffer.from(`fixture:${urlPath}:${i}`)]));
 const manifest = await createManifest("fixture", async source => {
-  const key = source.replace(/^fixture\\//, "");
+  const key = source.slice("fixture/".length);
   if (!fixture.has(key)) throw Error("unknown fixture " + key);
   return fixture.get(key);
 });

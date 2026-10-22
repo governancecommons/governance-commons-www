@@ -19,22 +19,42 @@ export async function createManifest(root = "dist", read = readFile) {
   }
   return { schema_version: 1, purpose: "build-to-live deployment fidelity ONLY; not human authorization", files };
 }
-export async function inspectLive(manifest, fetcher = fetch) {
+const transientStatuses = new Set([429, 500, 502, 503, 504]);
+export async function inspectLive(manifest, fetcher = fetch, wait = ms => new Promise(resolve => setTimeout(resolve, ms))) {
   if (manifest?.schema_version !== 1 || !Array.isArray(manifest.files) || manifest.files.length !== paths.length) throw Error("invalid manifest");
   const expected = new Map(paths.map(([source, urlPath]) => [urlPath, source]));
   const results = [];
   for (const item of manifest.files) {
     if (expected.get(item.path) !== item.source || !/^[0-9a-f]{64}$/.test(item.sha256) || !Number.isSafeInteger(item.bytes)) throw Error("unsafe or malformed manifest item");
     const url = origin + item.path;
-    try {
-      const response = await fetcher(url, { redirect: "manual", signal: AbortSignal.timeout(20000), headers: { "user-agent": "GC-Publication-Fidelity/1.0" } });
-      if (response.status !== 200 || response.url !== url) throw Error(`unexpected HTTP ${response.status} or redirect: ${response.url}`);
-      const bytes = Buffer.from(await response.arrayBuffer());
-      const actual = digest(bytes);
-      results.push({ path: item.path, status: actual === item.sha256 && bytes.length === item.bytes ? "MATCH" : "MISMATCH", expected_sha256: item.sha256, observed_sha256: actual, expected_bytes: item.bytes, observed_bytes: bytes.length });
-    } catch (error) {
-      results.push({ path: item.path, status: "ERROR", error: String(error.message || error) });
+    let result;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        const response = await fetcher(url, { redirect: "manual", signal: AbortSignal.timeout(20000), headers: { "user-agent": "GC-Publication-Fidelity/1.0" } });
+        if (response.status !== 200 || response.url !== url) {
+          if (transientStatuses.has(response.status) && response.url === url && attempt < 3) {
+            await wait(500 * attempt);
+            continue;
+          }
+          throw Error(`unexpected HTTP ${response.status} or redirect: ${response.url}`);
+        }
+        const bytes = Buffer.from(await response.arrayBuffer());
+        const actual = digest(bytes);
+        result = { path: item.path, status: actual === item.sha256 && bytes.length === item.bytes ? "MATCH" : "MISMATCH", attempts: attempt, expected_sha256: item.sha256, observed_sha256: actual, expected_bytes: item.bytes, observed_bytes: bytes.length };
+        break; // Actual content mismatches are never retried or masked.
+      } catch (error) {
+        // Network failures may be intermittent. Redirects and non-transient HTTP failures are not retried.
+        const message = String(error.message || error);
+        const retryable = !(message.startsWith("unexpected HTTP"));
+        if (retryable && attempt < 3) {
+          await wait(500 * attempt);
+          continue;
+        }
+        result = { path: item.path, status: "ERROR", attempts: attempt, error: message };
+        break;
+      }
     }
+    results.push(result);
   }
   return { checked_at_utc: new Date().toISOString(), target: origin, purpose: "deployment fidelity; not provenance or human approval", results };
 }
@@ -52,7 +72,7 @@ if (action === "generate") {
   const report = await inspectLive(manifest);
   await mkdir(path.dirname(output), { recursive: true });
   await writeFile(output, JSON.stringify(report, null, 2) + "\n");
-  for (const item of report.results) console.log(`${item.path}: ${item.status}${item.error ? " (" + item.error + ")" : ""}`);
+  for (const item of report.results) console.log(`${item.path}: ${item.status} (attempts: ${item.attempts})${item.error ? " (" + item.error + ")" : ""}`);
   const matches = report.results.filter(x => x.status === "MATCH").length;
   const message = `Build-to-live byte fidelity: ${matches}/${report.results.length} exact matches. Observational only; this is not a human approval or a production gate.\n`;
   console.log(message);

@@ -34,11 +34,11 @@ function decodeHtml(value) {
 function routeForFile(relative) {
   if (relative === "index.html") return "/";
   if (relative.endsWith("/index.html")) return "/" + relative.slice(0, -"index.html".length);
-  return "/" + relative.replace(/\\.html$/, "");
+  return "/" + relative.replace(/\.html$/, "");
 }
 
 function outputCandidates(pathname) {
-  const clean = decodeURIComponent(pathname).replace(/^\\/+/, "");
+  const clean = decodeURIComponent(pathname).replace(/^\/+/, "");
   if (!clean) return ["index.html"];
   if (clean.endsWith("/")) return [clean + "index.html"];
   return [clean, clean + ".html", clean + "/index.html"];

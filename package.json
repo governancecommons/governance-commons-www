@@ -4,6 +4,9 @@
   "license": "MIT",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22.23.4"
+  },
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
     "build": "astro build",
@@ -14,7 +17,7 @@
     "test:observatory:evidence": "node scripts/test-observatory-evidence.mjs"
   },
   "dependencies": {
-    "astro": "^5.16.5"
+    "astro": "^7.4.2"
   },
   "devDependencies": {}
 }
